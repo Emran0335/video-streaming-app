@@ -12,5 +12,8 @@
     "backend"
   ],
   "author": "Emran Hossain",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "mongoose": "^8.4.4"
+  }
 }
