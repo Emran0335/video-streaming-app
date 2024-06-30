@@ -1,6 +1,6 @@
-import mongoose, { Schema } from "mongoose";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import mongoose, { Schema } from "mongoose";
 
 const userSchema = new Schema(
   {
@@ -48,7 +48,9 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
+
 // arrow function does not contain (this object) reference
+
 userSchema.pre("save", async function (next) {
   // if we do not modify or create new passport, we should return next method. Otherwise, it will create new password each time as it is pre method of userSchema.
 
@@ -57,10 +59,12 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// customed method created for password validation
+// customed method created for password validation and added to the class userSchema.methods
+
 userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
+
 userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
@@ -75,6 +79,7 @@ userSchema.methods.generateAccessToken = function () {
     }
   );
 };
+
 userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
