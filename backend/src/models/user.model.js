@@ -106,5 +106,4 @@ password string
 refreshToken string
 createdAt Date
 updatedAt Date
-
 */
