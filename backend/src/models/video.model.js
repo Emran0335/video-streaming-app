@@ -25,7 +25,7 @@ const videoSchema = new Schema(
     },
     views: {
       type: Number,
-      required: true,
+      default: 0,
     },
     isPublished: {
       type: Boolean,
@@ -45,7 +45,6 @@ export const Video = mongoose.model("Video", videoSchema);
 
 /*
 // videos
-
 videoFile string
 thumbnail string
 owner ObjectId users

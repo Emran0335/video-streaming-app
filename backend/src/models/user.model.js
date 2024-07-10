@@ -52,14 +52,14 @@ const userSchema = new Schema(
 // arrow function does not contain (this object) reference
 
 userSchema.pre("save", async function (next) {
-  // if we do not modify or create new passport, we should return next method. Otherwise, it will create new password each time as it is pre method of userSchema.
+  // if we do not modify or create new password, we should return next method. Otherwise, it will create new password each time as it is pre method of userSchema.
 
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
-// customed method created for password validation and added to the class userSchema.methods
+// customized method created for password validation and added to the class userSchema.methods
 
 userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
