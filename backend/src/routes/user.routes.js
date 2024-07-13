@@ -3,6 +3,7 @@ import {
   changeCurrentPassword,
   getCurrentUser,
   getUserChannelProfile,
+  getUserWithWatchHistory,
   getWatchHistory,
   loginUser,
   logoutUser,
@@ -50,5 +51,8 @@ router
 
 router.route("/channel/:username").get(verifyJWT, getUserChannelProfile);
 router.route("/history").get(verifyJWT, getWatchHistory);
+
+// get user with videos
+router.route("/user-videos").get(verifyJWT, getUserWithWatchHistory);
 
 export default router;

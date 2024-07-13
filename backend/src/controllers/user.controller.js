@@ -447,6 +447,21 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     );
 });
 
+const getUserWithWatchHistory = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params._id).populate('watchHistory')
+    console.log(user);
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        user,
+        "Watch history fetched successfully!"
+      )
+    );
+});
+
 export {
   registerUser,
   loginUser,
@@ -459,4 +474,5 @@ export {
   updateUserCoverImage,
   getUserChannelProfile,
   getWatchHistory,
+  getUserWithWatchHistory,
 };

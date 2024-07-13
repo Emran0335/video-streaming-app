@@ -12,7 +12,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     query,
     sortBy = "createdAt",
     sortType = "asc",
-    userId,
+    owner,
   } = req.query;
   // TODO: get all videos based on query, sort, pagination
   // convert page and limit to integers
@@ -22,14 +22,12 @@ const getAllVideos = asyncHandler(async (req, res) => {
   // build the filter object
   const filter = {};
   if (query) {
-    filter.$or = [
-      { title: { $regex: query, $options: "i" } },
-      { description: { $regex: query, $options: "i" } },
-    ];
+    filter.title = query;
   }
-  if (userId) {
-    filter.owner = userId;
+  if (owner) {
+    filter.owner = owner;
   }
+  console.log(filter);
   // build the sort object
   const sort = {};
   if (sortBy) {
@@ -38,7 +36,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
   try {
     // execute the query with pagination and sorting
-    const aggregate = Video.aggregate([{ $match: filter }, { $sort: sort }]);
+    const aggregate = Video.aggregate({ $match: filter });
     const options = {
       page: pageNumber,
       limit: limitNumber,
@@ -110,8 +108,8 @@ const publishAVideo = asyncHandler(async (req, res) => {
   }
 
   const newVideo = await Video.create({
-    title,
-    description,
+    title: title,
+    description: description,
     videoFile: videoFile.url,
     thumbnail: thumbnail.url,
   });
