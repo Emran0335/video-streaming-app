@@ -1,10 +1,10 @@
+import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import jwt from "jsonwebtoken";
 
 // for the creation of token
 const generateAccessAndRefreshTokens = async (userId) => {
@@ -212,7 +212,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       secure: true,
     };
 
-    const { accessToken, newRefreshToken } =
+    const { accessToken, refreshToken: newRefreshToken } =
       await generateAccessAndRefreshTokens(user._id);
 
     return res
@@ -395,10 +395,11 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
 });
 
 const getWatchHistory = asyncHandler(async (req, res) => {
-  const user = await User.aggregate([
+  const userId = new mongoose.Types.ObjectId(req.user._id);
+  const userWatchHistory = await User.aggregate([
     {
       $match: {
-        _id: new mongoose.Types.ObjectId(req.user._id),
+        _id: userId,
       },
     },
     {
@@ -432,47 +433,56 @@ const getWatchHistory = asyncHandler(async (req, res) => {
               },
             },
           },
+          {
+            $project: {
+              title: 1,
+              description: 1,
+              videoFile: 1,
+              thumbnail: 1,
+              owner: 1,
+            },
+          },
         ],
       },
     },
   ]);
+  if (!userWatchHistory || userWatchHistory.length === 0) {
+    return res
+      .status(404)
+      .json(
+        new ApiResponse(404, null, "User not found or watch history is empty!")
+      );
+  }
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
-        user[0].watchHistory,
+        userWatchHistory[0].watchHistory,
         "Watch history fetched successfully!"
       )
     );
 });
 
 const getUserWithWatchHistory = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.params._id).populate('watchHistory')
-    console.log(user);
+  const user = await User.findById(req.params._id).populate("watchHistory");
 
   return res
     .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        user,
-        "Watch history fetched successfully!"
-      )
-    );
+    .json(new ApiResponse(200, user, "Watch history fetched successfully!"));
 });
 
 export {
-  registerUser,
+  changeCurrentPassword,
+  getCurrentUser,
+  getUserChannelProfile,
+  getUserWithWatchHistory,
+  getWatchHistory,
   loginUser,
   logoutUser,
   refreshAccessToken,
-  changeCurrentPassword,
-  getCurrentUser,
+  registerUser,
   updateAccountDetails,
   updateUserAvatar,
   updateUserCoverImage,
-  getUserChannelProfile,
-  getWatchHistory,
-  getUserWithWatchHistory,
 };

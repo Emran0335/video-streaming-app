@@ -68,60 +68,59 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
 const publishAVideo = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
-  // TODO: get video, upload to cloudinary, create video
-  // Extract video details from the request body.
-  // Upload the video to Cloudinary (or any other cloud storage service).
-  // Create a new video document in the database with the uploaded video’s details.
-  // Send a response back to the client.
+  const { userId } = req.params;
 
+  // Validate required fields
   if ([title, description].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required!");
   }
 
-  // console.log("req.files: ", req.files);
-  const videoFileLocalPath = req.files?.videoFile[0]?.path;
-  //const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
-  // console.log(videoFileLocalPath);
-  // console.log(thumbnailLocalPath);
+  // Extract paths from uploaded files
+  const videoFileLocalPath = req.files?.videoFile?.[0]?.path;
+  let thumbnailLocalPath = req.files?.thumbnail?.[0]?.path;
 
-  // for checking the coverImage, it is set or not
-  let thumbnailLocalPath;
-  if (
-    req.files &&
-    Array.isArray(req.files.thumbnail) &&
-    req.files.thumbnail.length > 0
-  ) {
-    thumbnailLocalPath = req.files.thumbnail[0].path;
+  // Validate required files
+  if (!videoFileLocalPath) {
+    throw new ApiError(400, "Video file is required!");
   }
-
   if (!thumbnailLocalPath) {
-    throw new ApiError(400, "thumbnail is required!");
+    throw new ApiError(400, "Thumbnail is required!");
   }
+
+  // Upload files to Cloudinary
   const videoFile = await uploadOnCloudinary(videoFileLocalPath);
   const thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
 
+  // Validate Cloudinary upload success
   if (!(videoFile && thumbnail)) {
     throw new ApiError(
       400,
-      "videoFile and thumbnail files not retrieved from cloudinary!"
+      "Failed to upload video file and thumbnail to Cloudinary!"
     );
   }
 
+  // Create new video entry in the database
   const newVideo = await Video.create({
-    title: title,
-    description: description,
+    title,
+    description,
     videoFile: videoFile.url,
     thumbnail: thumbnail.url,
+    owner: userId, // Link the video to the user by userId
   });
 
-  const publishVideo = await Video.findById(newVideo._id);
+  // Fetch and validate the newly created video
+  const publishVideo = await Video.findById(newVideo._id).populate(
+    "owner",
+    "username email"
+  );
   if (!publishVideo) {
     throw new ApiError(500, "Something went wrong while publishing the video");
   }
 
+  // Return success response
   return res
     .status(201)
-    .json(new ApiResponse(200, publishVideo, "Video published Successfully!"));
+    .json(new ApiResponse(201, publishVideo, "Video published successfully!"));
 });
 
 const getVideoById = asyncHandler(async (req, res) => {

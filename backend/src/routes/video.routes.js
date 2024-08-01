@@ -9,7 +9,7 @@ const router = Router();
 
 // all routes of videos
 router.route("/videos").get(getAllVideos);
-router.route("/publish").post(
+router.route("/:userId").post(
   upload.fields([
     {
       name: "videoFile",
