@@ -3,7 +3,6 @@ import {
   changeCurrentPassword,
   getCurrentUser,
   getUserChannelProfile,
-  getUserWithWatchHistory,
   getWatchHistory,
   loginUser,
   logoutUser,
@@ -11,10 +10,10 @@ import {
   registerUser,
   updateAccountDetails,
   updateUserAvatar,
-  updateUserCoverImage,
+  updateUserCoverImage
 } from "../controllers/user.controller.js";
-import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
 
@@ -51,8 +50,5 @@ router
 
 router.route("/channel/:username").get(verifyJWT, getUserChannelProfile);
 router.route("/history").get(verifyJWT, getWatchHistory);
-
-// get user with videos
-router.route("/user-videos").get(verifyJWT, getUserWithWatchHistory);
 
 export default router;
