@@ -18,7 +18,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     channel: channelId,
   });
   if (isSubscribed) {
-    const unsubscribe = await Subscription.findByIdAndDelete(isSubscribed);
+    const unsubscribe = await Subscription.findByIdAndDelete(isSubscribed._id);
     if (!unsubscribe) {
       throw new ApiError(500, "Error while unsubscribing");
     }
