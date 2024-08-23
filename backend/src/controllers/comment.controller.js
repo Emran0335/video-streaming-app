@@ -1,8 +1,8 @@
-import { asyncHandler } from "../utils/asyncHandler.js";
+import mongoose, { isValidObjectId } from "mongoose";
+import { Comment } from "../models/comment.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { Comment } from "../models/comment.model.js";
-import mongoose, { isValidObjectId } from "mongoose";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const getVideoComments = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
@@ -152,4 +152,5 @@ const deleteComment = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, deletedComment, "Comment deleted successfully"));
 });
 
-export { getVideoComments, addComment, updateComment, deleteComment };
+export { addComment, deleteComment, getVideoComments, updateComment };
+

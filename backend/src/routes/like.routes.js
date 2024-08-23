@@ -3,7 +3,7 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 import {
   getLikedVideos,
   toggleCommentLike,
-  toggleTweetLike,
+  toggleTweetLike,  
   toggleVideoLike,
 } from "../controllers/like.controller.js";
 
@@ -16,3 +16,4 @@ router.route("/toggle/t/:tweetId").post(toggleTweetLike);
 router.route("/videos").get(getLikedVideos);
 
 export default router;
+

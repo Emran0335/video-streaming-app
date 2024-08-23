@@ -1,4 +1,4 @@
-import { asyncHandler } from "../utils/asyncHandler";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createPlaylist = asyncHandler(async (req, res) => {
   const { name, description } = req.body;
@@ -25,7 +25,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
   // TODO: remove video from playlist
 });
 
-const deletePlalist = asyncHandler(async (req, res) => {
+const deletePlaylist = asyncHandler(async (req, res) => {
   const { playlistId } = req.params;
   // TODO: delete playlist
 });
@@ -42,6 +42,6 @@ export {
   getPlaylistById,
   addVideoToPlaylist,
   removeVideoFromPlaylist,
-  deletePlalist,
+  deletePlaylist,
   updatePlaylist,
 };
