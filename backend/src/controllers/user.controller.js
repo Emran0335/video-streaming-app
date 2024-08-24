@@ -6,8 +6,8 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import {
-  uploadOnCloudinary,
   deleteFromCloudinary,
+  uploadOnCloudinary,
 } from "../utils/cloudinary.js";
 
 // to delete files from the local file system
@@ -468,13 +468,14 @@ const getWatchHistory = asyncHandler(async (req, res) => {
               ],
             },
           },
-          {
-            $addFields: {
-              owner: {
-                $first: "$owner",
-              },
-            },
-          },
+          // // as owner is array, so first object of array is added
+          // {
+          //   $addFields: {
+          //     owner: {
+          //       $first: "$owner",
+          //     },
+          //   },
+          // },
         ],
       },
     },

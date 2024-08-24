@@ -57,6 +57,13 @@ const getAllVideos = asyncHandler(async (req, res) => {
       },
     },
     {
+      $addFields: {
+        owner: {
+          $first: "$owner",
+        },
+      },
+    },
+    {
       $project: {
         _id: 1,
         owner: 1,

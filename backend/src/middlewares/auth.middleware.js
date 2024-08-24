@@ -1,7 +1,7 @@
+import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import jwt from "jsonwebtoken";
 
 export const verifyJWT = asyncHandler(async (req, _, next) => {
   // if res is not used, we can use _ instead of res
@@ -27,6 +27,7 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
 
     // new object should be added to the req object.
     req.user = user;
+    // console.log(req.user?._id.toString())
     next();
   } catch (error) {
     throw new ApiError(401, error?.message || "Invalid Access Token!");
