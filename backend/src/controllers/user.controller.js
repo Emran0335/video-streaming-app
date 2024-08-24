@@ -395,6 +395,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         as: "subscribedTo",
       },
     },
+    //If you prefer to work with a single object instead of an array, you use the $addFields stage to flatten the array
     {
       $addFields: {
         subscribersCount: {
