@@ -132,18 +132,99 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
       "You do not have permission to perform removing video from playlist"
     );
   }
-  // if(!playlist.videos.include)
+  if (!playlist.videos.includes(videoId)) {
+    throw new ApiError(400, "Video not in the playlist");
+  }
+  const removeVideo = await Playlist.findByIdAndUpdate(
+    playlistId,
+    {
+      $pull: {
+        videos: {
+          $in: [`${videoId}`],
+        },
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  if (!removeVideo) {
+    throw new ApiError(
+      500,
+      "Something went wrong while removing video from playlist"
+    );
+  }
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        removeVideo,
+        "video removed from playlist successfully"
+      )
+    );
 });
 
 const deletePlaylist = asyncHandler(async (req, res) => {
-  const { playlistId } = req.params;
   // TODO: delete playlist
+  const { playlistId } = req.params;
+  if (!playlistId || !isValidObjectId(playlistId)) {
+    throw new ApiError(400, "Invalid playlist id");
+  }
+  const playlist = await Playlist.findById(playlistId);
+  if (!playlist) {
+    throw new ApiError(400, "Playlist not found");
+  }
+  if (playlist?.owner.toString() !== req.user?._id.toString()) {
+    throw new ApiError(
+      401,
+      "You do not have permission to perform the deletion of playlist"
+    );
+  }
+  const delPlaylist = await Playlist.findByIdAndDelete(playlistId);
+  if (!delPlaylist) {
+    throw new ApiError(500, "Error while deleting playlist");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, delPlaylist, "Playlist deleted successfully"));
 });
 
 const updatePlaylist = asyncHandler(async (req, res) => {
+  // TODO: update playlist
   const { playlistId } = req.params;
   const { name, description } = req.body;
-  // TODO: update playlist
+  if (!playlistId || !isValidObjectId(playlistId)) {
+    throw new ApiError(400, "Invalid playlist id");
+  }
+  const playlist = await Playlist.findById(playlistId);
+  if (!playlist) {
+    throw new ApiError(400, "Playlist not found");
+  }
+  if (!name && !description) {
+    throw new ApiError(400, "At least one of the field is required");
+  }
+  if (playlist?.owner.toString() !== req.user?._id.toString()) {
+    throw new ApiError(401, "You do not have permission to update playlist");
+  }
+  const updatedPlaylist = await Playlist.findByIdAndUpdate(
+    playlistId,
+    {
+      $set: {
+        name: name || playlist?.name,
+        description: description || playlist?.description,
+      },
+    },
+    { new: true }
+  );
+  if (!updatedPlaylist) {
+    throw new ApiError(500, "Error while updating playlist");
+  }
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, updatedPlaylist, "Playlist updated successfully")
+    );
 });
 
 export {
