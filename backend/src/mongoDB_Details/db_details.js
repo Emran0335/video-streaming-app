@@ -1181,4 +1181,10 @@ Ans: json->
 a. The $lookup stage joins customers with orders and users a pipeline to calculate the total amount spent by each customer.
 b. $group is used inside the pipeline to aggregate the total order amount per customer.
 c. $unwind flattens the resulting orderSummary array, and preserveNullAndEmptyArrays: true, ensures that customers without orders are still included in the output.
+
+Conclusion
+The $lookup stage with a pipeline is a powerful tool for performing advanced joins and transformations in MongoDB. By combining multiple stages within the lookup pipeline, you can filter, reshape, and aggregate data from related collections in complex ways.
+1. Fitlering: Use $match to limit the joined data.
+2. Transforming: Use stages like $project, $unwind, or $addFields to modify the structure of the joined documents.
+3. Nested lookups: Perform additional within the pipeline for even more complex joins.
 */
