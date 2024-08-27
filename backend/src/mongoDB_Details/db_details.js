@@ -1,4 +1,4 @@
-/*
+
 1. db.collection.find()
 The find() method in MongoDB is one of the most commonly used methods to retrieve documents from a collection. It allows you to query a collection and return documents that match a given criteria(filter). It is powerful and flexible, supporting complex queries and projections.
 
@@ -90,9 +90,13 @@ Why Use find()?
 2. Filtering Data: The ability to filter documents based on specific conditions is powerful for targeting the exact data you need.
 3. Efficient Handling of Large Datasets: Since find() returns a cursor, it allows you to work efficienty with large datasets without loading all documents into memory at once.
 4. Versatility: It supports a wide range of operations, including sorting, limiting, skipping, and projection, making it very flexible for different use cases.
-*/
 
-/*
+
+
+
+
+
+
 2. db.collection.findOne()
 The findOne() method in MongoDB is used to retrieve a single document from a collection that matches the specific query criteria. Unlike find(), which returns a cursor to a set of documents, findOne() immediately returns the first document that matches the query(or null if no document matches).
 
@@ -152,9 +156,14 @@ b. find(): Continues searching through the collection to retrieve all matching d
 
 * Retrieving a Single Document by Unique Field: db.users.findOne({email: "alice@example.com"})
 Ans: This will return the document for the user with that email address. Since emails are unique, you know that there will only be one matching document, making findOne() the ideal mathod.
-*/
 
-/*
+
+
+
+
+
+
+
 3. Model.findById()
 The findById() method in MongoDB (commonly used through the Mongoose ODM in Node.js) is a specialized method for retrieving a single document by its unique_id field. This method simplifies the process of querying documents by their _id by automatically constructing the query and returning the document that matches the given ID.
 
@@ -245,9 +254,14 @@ User.findById(userId, (err, user) => {
     user.save();
   }
 });
-*/
 
-/*
+
+
+
+
+
+
+
 db.users.findOneAndDelete() or Model.findOneAndDelete()
 The findOneAndDelete() method in MongoDB (and Mongoose) is useful function for finding and deleting a single document that matches a specific query. This method not only deletes the document but also returns the deleted document to the application, allowing you to access its data before it is removed from the collection.
 
@@ -331,9 +345,14 @@ Token.findOneAndDelete({ expirationDate: { $lt: new Date() } }, (err, token) => 
 });
 a. The query finds the first token that has expired(i.e. expirationDate is less than the current date).
 b. The findOneAndDelete() method deletes the token and returns its details.
-*/
 
-/*
+
+
+
+
+
+
+
 Model.findOneAndReplace()
 The findOneAndReplace() method in MongoDB(commonly used in Mongoose) is a specialized operation that allows you to find a single document that matches a specified query and replace it with a new document. This method is useful when you want to update an entire document while aslo retrieving the original document before the replacement.
 
@@ -435,9 +454,14 @@ User.findOneAndReplace({ _id: userId }, updatedProfile, { returnDocument: 'after
 });
 a. The updatedProfile completely replaces the exiting user document.
 b. The updated profile is returned and can be used for further processing or confirmation.
-*/
 
-/*
+
+
+
+
+
+
+
 db.users.findOneAndUpdate() or Model.findOneAndUpdate()
 The findOneAndUpdate() method in MongoDB(and Mongoose) is a crucial tool for updating a single document that matches a specific query while returning either the original or the updated document. This method is especially useful when you need to modify a document's field but want to maintain control over the operation and the document state. Below are detailed reasons and scenarios where findOneAndUpdate() is essential.
 
@@ -552,9 +576,14 @@ b. findOneAndUpdate(): Partially updates a document without affecting other fiel
 3. findOneAndDelete() vs findOneAndUpdate()
 a. findOneAndDelete(): Finds and deletes a document, returning the deleted docuemnt.
 b. findOneAndUpdate(): Finds and updates a document, returning either the original or updated document based on your needs.
-*/
 
-/*
+
+
+
+
+
+
+
 The $match stage in aggregation pipelie
 
 The $match stage in aggregation pipeline is crucial because it filters the documents in the collection based on specified conditions before they proceed to the subsequent stages of the pipeline. It functions similarly to the find query, but in the context of aggregation, $match plays a vital role in optimizing performance and ensuring that only relevant documents are processed.
@@ -642,9 +671,15 @@ db.sales.aggregate([
 a. The first $match filters the data by date.
 b. The second $match narrows it down to the "Electronics" category.
 c. This ensures that only relevant data moves forward to the  grouping, sorting and limiting stages.
-*/
 
-/*
+
+
+
+
+
+
+
+
 The $group stage in Aggregation Pipeline
 
 The $group stage in the MongoDB aggregation pipeline is a powerful tool that allows you to aggregate data based on one or more fields and perform operations like sum, average, count, and more on grouped data. It is often used for tasks like calculating totals, averages, counts, or creating custom groupings in your dataset.
@@ -779,9 +814,15 @@ Ans: json->
   { "_id": "Clothing", "minPrice": 50, "maxPrice": 75 }
 ]
 a. The $group stage groups the products by category, and $min and $max find the minimum and maximum prices within each category.
-*/
 
-/*
+
+
+
+
+
+
+
+
 The $lookup stage in MongoDB's aggregation pipeline
 
 The $lookup stage in MongoDB's aggregation pipeline is used to perform a "join" operation between collections. This allows you to combine data from two different collections based on a related field, similar to how you would perform a join in SQL.
@@ -1182,9 +1223,222 @@ a. The $lookup stage joins customers with orders and users a pipeline to calcula
 b. $group is used inside the pipeline to aggregate the total order amount per customer.
 c. $unwind flattens the resulting orderSummary array, and preserveNullAndEmptyArrays: true, ensures that customers without orders are still included in the output.
 
+A few more example: $lookup
+The $lookup stage in MongoDB is used to perform a left outer join with another collection. The localField and foreignField options are used to specify the fields that should be matched between the two collections. Here’s how $lookup works with localField and foreignField.
+
+Example: Using $lookup with localField and foreignField
+
+Imagine you have two collections: orders and customers. The orders collection contains information about orders placed by customers, and the customers collection contains customer details. You want to retrieve orders along with the corresponding customer details.
+
+Collection: orders
+[
+  { "_id": 1, "product": "Laptop", "amount": 1200, "customerId": 101 },
+  { "_id": 2, "product": "Phone", "amount": 800, "customerId": 102 },
+  { "_id": 3, "product": "Tablet", "amount": 600, "customerId": 103 }
+]
+Collection: customers
+[
+  { "_id": 101, "name": "Alice", "email": "alice@example.com" },
+  { "_id": 102, "name": "Bob", "email": "bob@example.com" },
+  { "_id": 104, "name": "Charlie", "email": "charlie@example.com" }
+]
+In this example, the orders collection has a customerId field, which corresponds to the _id field in the customers collection.
+Aggregation Pipeline with $lookup
+
+To join the orders collection with the customers collection and retrieve customer details for each order, you can use the following aggregation pipeline:
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: "customers",         // The collection to join (customers)
+      localField: "customerId",  // The field from the orders collection (customerId)
+      foreignField: "_id",       // The field from the customers collection (_id)
+      as: "customerDetails"      // The name of the array field to store matched documents
+    }
+  },
+  {
+    $unwind: "$customerDetails"  // Flatten the array to get individual customer details
+  }
+])
+Explanation
+
+	•	from: Specifies the collection to join (customers in this case).
+	•	localField: The field in the orders collection (customerId) that you want to match with the customers collection.
+	•	foreignField: The field in the customers collection (_id) that should match with the localField.
+	•	as: The name of the field where the joined documents from the customers collection will be stored as an array.
+	•	$unwind: This stage is used to flatten the array (customerDetails), so each document contains the individual customer details instead of an array.
+
+Output
+After running the aggregation pipeline, the output will look like this:
+[
+  {
+    "_id": 1,
+    "product": "Laptop",
+    "amount": 1200,
+    "customerId": 101,
+    "customerDetails": {
+      "_id": 101,
+      "name": "Alice",
+      "email": "alice@example.com"
+    }
+  },
+  {
+    "_id": 2,
+    "product": "Phone",
+    "amount": 800,
+    "customerId": 102,
+    "customerDetails": {
+      "_id": 102,
+      "name": "Bob",
+      "email": "bob@example.com"
+    }
+  },
+  {
+    "_id": 3,
+    "product": "Tablet",
+    "amount": 600,
+    "customerId": 103,
+    "customerDetails": null  // No matching customer found
+  }
+]
+Explanation of Output
+
+	1.	Order with ID 1: The customerId is 101, which matches with Alice in the customers collection. Therefore, Alice’s details are included in the customerDetails field.
+	2.	Order with ID 2: The customerId is 102, which matches with Bob. Bob’s details are included in the customerDetails field.
+	3.	Order with ID 3: The customerId is 103, but there is no matching customer with _id 103 in the customers collection. Therefore, the customerDetails field is null.
+
+Use Cases for $lookup with localField and foreignField
+
+	•	Joining Collections: When you need to join two collections based on a common field (like a foreign key relationship).
+	•	Embedding Related Data: When you want to include related data from another collection in your query results without making multiple queries.
+	•	Creating Reports: When you need to generate reports that combine data from multiple collections.
+
+
 Conclusion
 The $lookup stage with a pipeline is a powerful tool for performing advanced joins and transformations in MongoDB. By combining multiple stages within the lookup pipeline, you can filter, reshape, and aggregate data from related collections in complex ways.
 1. Fitlering: Use $match to limit the joined data.
 2. Transforming: Use stages like $project, $unwind, or $addFields to modify the structure of the joined documents.
 3. Nested lookups: Perform additional within the pipeline for even more complex joins.
-*/
+
+
+
+
+
+
+
+
+
+The $project stage in MongoDB's aggregation
+
+The $project stage in MongoDB's pipeline is used to control the shape of the documents that pass through the pipeline. It allows you to include, exclude, or compute new fields in your documents. This is useful when you need to restructure your data, include only specific fields, or create new fields based on existing data.
+
+Why Do We Need to Use $project?
+1. Select Specific Fields: Sometimes, you do not need all the fields from a document. $project allows you to include only the necessary fields, reducing the size of the output and making it more readable. 
+2. Exclude Fields: You can also exclude certain fields that are not relevant to your query, simplifying the output.
+3. Rename Fields: If you need to change the names of fields for readability or consistency, $project can help you do that.
+4. Create Computed Fields: $project can be used to create new fields that are computed based on existing fields. For example, you can combine fields, apply mathematical operations, or conditionally create new fields.
+5. Transform Data: You can reshape the data to meet specific requirements, such as converting embedded documents into top-level fields or vice versa.
+
+Example 1: Selecting Specific Fields
+// Use Case: You have a products collection, and you want to retrieve only the name and price fields from each document.
+Collection: products
+[
+  { "_id": 1, "name": "Laptop", "price": 1000, "category": "Electronics", "stock": 50 },
+  { "_id": 2, "name": "Phone", "price": 500, "category": "Electronics", "stock": 100 }
+]
+Pipeline: 
+db.products.aggregate([
+  {
+    $project: {
+      name: 1,  // Include the name field
+      price: 1  // Include the price field
+    }
+  }
+])
+Ans: json->
+[
+  { "_id": 1, "name": "Laptop", "price": 1000 },
+  { "_id": 2, "name": "Phone", "price": 500 }
+]
+a. The $project stage is used to include only the name and price fields in the output. All other fields, such as category and stock, are excluded.
+
+Example 2: Excluding Fields
+// Use Case: You want to retrieve products but exclude the stock field from the output.
+Pipeline:
+db.products.aggregate([
+  {
+    $project: {
+      stock: 0  // Exclude the stock field
+    }
+  }
+])
+Ans: json->
+[
+  { "_id": 1, "name": "Laptop", "price": 1000, "category": "Electronics" },
+  { "_id": 2, "name": "Phone", "price": 500, "category": "Electronics" }
+]
+a. The $project stage is used to exclude the  stock field, while all other fields are included by default.
+
+Example 3: Renaming Fields
+// Use Case: You want to rename the price field to cost in the output
+Pipeline:
+db.products.aggregate([
+  {
+    $project: {
+      _id: 1,           // Include the _id field
+      name: 1,          // Include the name field
+      cost: "$price"    // Rename price to cost
+    }
+  }
+])
+a. The $project stage renames the price field to cost by asigning price to the cost field in the output.
+
+Example 4: Creating Computed Fields
+// Use Case: You want to calculate the total value of the stock for each product(i.e. price * stock) and include it as a new field called totalValue.
+Pipeline:
+db.products.aggregate([
+  {
+    $project: {
+      name: 1,                     // Include the name field
+      price: 1,                    // Include the price field
+      stock: 1,                    // Include the stock field
+      totalValue: {                // Create a new field totalValue
+        $multiply: ["$price", "$stock"]  // Multiply price by stock
+      }
+    }
+  }
+])
+a. The $project stage creates a new field called totalValue, which is calculated by multiplying the price and stock fields. This allows you to compute new information directly in the aggregation pipeline.
+
+Example 5: Conditional Fields with $cond
+// Use Case: You want to add a new field called stockStatus that indcates whether the product is "In Stock" or "Out of Stock" based on the stock value.
+Pipeline:
+db.products.aggregate([
+  {
+    $project: {
+      name: 1,   // Include the name field
+      stock: 1,  // Include the stock field
+      stockStatus: {  // Create a new field stockStatus
+        $cond: {
+          if: { $gt: ["$stock", 0] },  // If stock is greater than 0
+          then: "In Stock",            // Then set stockStatus to "In Stock"
+          else: "Out of Stock"         // Otherwise, set stockStatus to "Out of Stock"
+        }
+      }
+    }
+  }
+])
+Ans: json->
+[
+  { "_id": 1, "name": "Laptop", "stock": 50, "stockStatus": "In Stock" },
+  { "_id": 2, "name": "Phone", "stock": 100, "stockStatus": "In Stock" }
+]
+a. The $project stage uses $cond to create a conditional field stockStatus that checks if the stock value is greater than 0. If true, stockStatus is set to "In Stock"; otherwise, it is set to "Out of Stock",
+Conclusion
+
+The $project stage is a versatile tool in MongoDB’s aggregation pipeline that allows you to:
+
+	•	Select only the fields you need.
+	•	Exclude unnecessary fields.
+	•	Rename fields for better readability or consistency.
+	•	Compute new fields based on existing data.
+	•	Transform and reshape your data as needed.
