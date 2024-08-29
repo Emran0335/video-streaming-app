@@ -1,4 +1,4 @@
-
+/*
 1. db.collection.find()
 The find() method in MongoDB is one of the most commonly used methods to retrieve documents from a collection. It allows you to query a collection and return documents that match a given criteria(filter). It is powerful and flexible, supporting complex queries and projections.
 
@@ -1442,3 +1442,4 @@ The $project stage is a versatile tool in MongoDB’s aggregation pipeline that 
 	•	Rename fields for better readability or consistency.
 	•	Compute new fields based on existing data.
 	•	Transform and reshape your data as needed.
+*/
