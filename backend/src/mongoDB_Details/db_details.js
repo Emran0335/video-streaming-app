@@ -1,4 +1,4 @@
-/*
+
 1. db.collection.find()
 The find() method in MongoDB is one of the most commonly used methods to retrieve documents from a collection. It allows you to query a collection and return documents that match a given criteria(filter). It is powerful and flexible, supporting complex queries and projections.
 
@@ -1442,4 +1442,83 @@ The $project stage is a versatile tool in MongoDB’s aggregation pipeline that 
 	•	Rename fields for better readability or consistency.
 	•	Compute new fields based on existing data.
 	•	Transform and reshape your data as needed.
-*/
+
+
+
+
+
+
+
+
+$addToSet in the MongoDB
+
+$addToSet is a powerful operator in MongoDB that is typically used in the context of the $group stage of an aggregation pipeline or in an update operation. The main function of $addToSet is to add unique values to an array. It ensures that there are no duplicate entries in the array, making it different from the $push operator, which can add duplicates.
+
+Use Cases for $addToSet
+1. Collecting Unique Values: When you want to collect unique values from a field across multiple documents.
+2. Avoiding Duplicates: When you want to ensure that an array does not contain duplicate values, either in an aggregation result or when updating documents.
+3. Creating Unique Lists: When you need to generate a unique list of items, such as tags, categories, or any other array of distinct values.
+
+Example 1: Using $addToSet in Aggregation
+// Suppose you have a sales collection where each document represents a sale, including a customerId and a list of products bought by the customer. You want to create a report that lists all the unique products bought by each customer.
+
+Collection: Sales
+[
+  { "_id": 1, "customerId": 101, "product": "Laptop" },
+  { "_id": 2, "customerId": 101, "product": "Phone" },
+  { "_id": 3, "customerId": 102, "product": "Tablet" },
+  { "_id": 4, "customerId": 101, "product": "Laptop" },
+  { "_id": 5, "customerId": 102, "product": "Laptop" }
+]
+Aggregation Pipeline with $addToSet
+// To group the sales by customerId and collect the unique products bought by each customer, you can use the following aggregation pipeline:
+db.sales.aggregate([
+  {
+    $group: {
+      _id: "$customerId",           // Group by customerId
+      uniqueProducts: {             // Create a uniqueProducts array
+        $addToSet: "$product"        // Add unique products to the array
+      }
+    }
+  }
+])
+a. $group: This stage groups the documents by the customerId field.
+b. $addToSet: This operator is used to add the unique values of the product field to the uniqueProducts array. Any duplicate products will be automatcally filtered out.
+Ans: json->
+[
+  {
+    "_id": 101,
+    "uniqueProducts": ["Laptop", "Phone"]
+  },
+  {
+    "_id": 102,
+    "uniqueProducts": ["Tablet", "Laptop"]
+  }
+]
+a. Customer 101: Bought a "Laptop" and a "Phone". Even though "Laptop" appears twice in the sales records, it is only added once to the uniqueProducts array because of $addToSet.
+b. Customer 102: Bought a "Tablet" and a "Laptop". Both products are added to the uniqueProducts array, and since both are unique, the appear once.
+
+Example 2: Using $addToSet in an Update Operation
+// Suppose you have a users collection, and you want to add a new tag to a user's tags array, but only if the tag does not already exist in the array.
+Collection: users
+[
+  { "_id": 1, "username": "Alice", "tags": ["mongodb", "database"] },
+  { "_id": 2, "username": "Bob", "tags": ["nodejs", "javascript"] }
+]
+Udate Operation with $addToSet
+// To add a tag to Alice's tags array, but only if it does not already exist:
+db.users.updateOne(
+  { username: "Alice" },
+  {
+    $addToSet: { tags: "backend" }  // Add the tag "backend" if it's not already in the array
+  }
+)
+a. $addToSet: Ensures that the tag "backend" is added to Alice's tags array only if it is not already present.
+Ans: json->
+// After running the update, Alice's document will look like this:
+{
+  "_id": 1,
+  "username": "Alice",
+  "tags": ["mongodb", "database", "backend"]  // "backend" is added as it's unique
+}
+
