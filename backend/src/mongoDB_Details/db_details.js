@@ -1,4 +1,4 @@
-
+/*
 1. db.collection.find()
 The find() method in MongoDB is one of the most commonly used methods to retrieve documents from a collection. It allows you to query a collection and return documents that match a given criteria(filter). It is powerful and flexible, supporting complex queries and projections.
 
@@ -1522,3 +1522,4 @@ Ans: json->
   "tags": ["mongodb", "database", "backend"]  // "backend" is added as it's unique
 }
 
+*/

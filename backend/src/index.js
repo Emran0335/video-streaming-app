@@ -17,6 +17,13 @@ connectDB()
   .catch((err) => console.log("MONGO db connection failed !!!", err));
 
 /*
+import os from "os"
+console.log("Operation System: ", os.platform())
+console.log("Architecture System: ", os.arch())
+console.log("Total Memory System: ", os.totalmem())
+console.log("Free Memory System: ", os.freemem())
+*/
+/*
 // if we use node module, we must use the file extention when we want to import that particular file i.e "./constants.js"
 (async () => {
   try {
