@@ -4,7 +4,8 @@ const initialState = {
   status: false,
   userData: null,
 };
-
+const userFromCookie = localStorage.getItem("user");
+console.log("userFromCookie", JSON.parse(userFromCookie))
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -23,3 +24,5 @@ const authSlice = createSlice({
 export const { setUser, unSetUser } = authSlice.actions;
 
 export default authSlice.reducer;
+
+
