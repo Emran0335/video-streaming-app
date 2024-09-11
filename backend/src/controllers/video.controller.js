@@ -23,22 +23,24 @@ const getAllVideos = asyncHandler(async (req, res) => {
     sortBy = "createdAt",
     sortType = "desc",
   } = req.query;
-  if (!query || query.trim() === "") {
-    throw new ApiError(400, "Query is required");
-  }
+
   const videos = await Video.aggregate([
-    {
-      $match: {
-        $or: [
+    ...(query
+      ? [
           {
-            title: { $regex: query, $options: "i" },
+            $match: {
+              $or: [
+                {
+                  title: { $regex: query, $options: "i" },
+                },
+                {
+                  description: { $regex: query, $options: "i" },
+                },
+              ],
+            },
           },
-          {
-            description: { $regex: query, $options: "i" },
-          },
-        ],
-      },
-    },
+        ]
+      : []),
     {
       $lookup: {
         from: "users",
