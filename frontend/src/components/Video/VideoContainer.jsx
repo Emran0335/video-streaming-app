@@ -8,7 +8,7 @@ import VideoCard from "./VideoCard";
 function VideoContainer() {
   const dispatch = useDispatch();
   const { videos } = useSelector((state) => state.videos);
-  console.log(videos);
+  console.log("videos", videos);
 
   const getVideoData = async () => {
     try {
