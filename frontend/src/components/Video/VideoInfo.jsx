@@ -7,6 +7,7 @@ import { FaBell, FaChevronDown, FaChevronUp, FaSave } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 function VideoInfo({ video }) {
+    console.log(video?.createdAt)
   const timeDistance = getTimeDistanceToNow(video?.createdAt);
   const authStatus = useSelector((state) => state.auth.status);
   const [showFullDescription, setShowFullDescription] = useState(false);

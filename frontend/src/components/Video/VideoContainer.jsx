@@ -1,11 +1,12 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addVideos } from "../../store/videosSlice";
 import { FaVideo } from "react-icons/fa";
 import VideoCard from "./VideoCard";
 
 function VideoContainer() {
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const { videos } = useSelector((state) => state.videos);
   console.log("videos", videos);
@@ -19,14 +20,19 @@ function VideoContainer() {
         dispatch(addVideos(response?.data?.data));
       }
     } catch (error) {
-      console.log("Error while fetching videos", error);
+      setError("Failed to fetch videos and add to store slice", error);
     }
   };
+
   useEffect(() => {
     if (!videos) {
       getVideoData();
     }
   }, [videos]);
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   if (!videos || videos.length === 0) {
     return (

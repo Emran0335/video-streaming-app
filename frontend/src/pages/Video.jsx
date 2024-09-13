@@ -58,7 +58,7 @@ function Video() {
           </div>
           <div className="w-[30%]">
             {videos
-              ?.filter((video) => video?._id !== videoId)
+              ?.filter((video) => video?._id !== videoId) // exclude the current video from the list(array)
               .map((video) => (
                 <VideoListCard
                   key={video?._id}
