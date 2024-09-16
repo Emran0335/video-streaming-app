@@ -35,6 +35,9 @@ const getVideoComments = asyncHandler(async (req, res) => {
       },
     },
     {
+      $unwind: "$owner", // Flatten the array to get owner's details
+    },
+    {
       $lookup: {
         from: "likes",
         localField: "_id",
@@ -57,6 +60,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
         likesCount: 1,
         content: 1,
         owner: 1,
+        createdAt:1,
       },
     },
     {
@@ -153,4 +157,3 @@ const deleteComment = asyncHandler(async (req, res) => {
 });
 
 export { addComment, deleteComment, getVideoComments, updateComment };
-
