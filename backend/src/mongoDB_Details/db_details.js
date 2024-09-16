@@ -1,4 +1,4 @@
-/*
+
 1. db.collection.find()
 The find() method in MongoDB is one of the most commonly used methods to retrieve documents from a collection. It allows you to query a collection and return documents that match a given criteria(filter). It is powerful and flexible, supporting complex queries and projections.
 
@@ -1522,11 +1522,11 @@ Ans: json->
   "tags": ["mongodb", "database", "backend"]  // "backend" is added as it's unique
 }
 
-*/
 
 
 
-/*
+
+
 *** $bucket in Aggregation Pipeline ***
 The $bucket operator in MongoDB's aggregation framework is used for data bucketing, which is essential grouping data into discrete ranges or "buckets" based on the values in a specific field. This is particularly useful for generating histograms or summaries of data by dividing a continuous range of values into intervals. 
 
@@ -1624,6 +1624,154 @@ Ans: json->
   { "_id": 40, "totalSales": 900, "productCount": 2 }, // Products D and E (price: 50, 75)
   { "_id": "Other", "totalSales": 0, "productCount": 0 }  // No products with prices outside these ranges
 ]
+Another Example: 
+db.artists.insertMany([
+  {
+    _id: 1,
+    last_name: "Bernard",
+    first_name: "Emil",
+    year_born: 1868,
+    year_died: 1941,
+    nationality: "France",
+  },
+  {
+    _id: 2,
+    last_name: "Rippl-Ronai",
+    first_name: "Joszef",
+    year_born: 1861,
+    year_died: 1927,
+    nationality: "Hungary",
+  },
+  {
+    _id: 3,
+    last_name: "Ostroumova",
+    first_name: "Anna",
+    year_born: 1871,
+    year_died: 1955,
+    nationality: "Russia",
+  },
+  {
+    _id: 4,
+    last_name: "Van Gogh",
+    first_name: "Vincent",
+    year_born: 1853,
+    year_died: 1890,
+    nationality: "Holland",
+  },
+  {
+    _id: 5,
+    last_name: "Maurer",
+    first_name: "Alfred",
+    year_born: 1868,
+    year_died: 1932,
+    nationality: "USA",
+  },
+  {
+    _id: 6,
+    last_name: "Munch",
+    first_name: "Edvard",
+    year_born: 1863,
+    year_died: 1944,
+    nationality: "Norway",
+  },
+  {
+    _id: 7,
+    last_name: "Redon",
+    first_name: "Odilon",
+    year_born: 1840,
+    year_died: 1916,
+    nationality: "France",
+  },
+  {
+    _id: 8,
+    last_name: "Diriks",
+    first_name: "Edvard",
+    year_born: 1855,
+    year_died: 1930,
+    nationality: "Norway",
+  },
+]);
+
+// db.artists.find();
+db.artists.aggregate([
+  {
+    $bucket: {
+      groupBy: "$year_born",
+      boundaries: [1840, 1850, 1860, 1870, 1880, 1890],
+      default: "Other",
+      output: {
+        count: { $sum: 1 },
+        artists: {
+          $push: {
+            name: { $concat: ["$first_name", " ", "$last_name"] },
+            year_born: "$year_born",
+          },
+        },
+      },
+    },
+  },
+]);
+
+Ans: json-> 
+[
+  {
+    "_id": 1840,
+    "count": 1,
+    "artists": [
+      {
+        "name": "Odilon Redon",
+        "year_born": 1840
+      }
+    ]
+  },
+  {
+    "_id": 1850,
+    "count": 2,
+    "artists": [
+      {
+        "name": "Vincent Van Gogh",
+        "year_born": 1853
+      },
+      {
+        "name": "Edvard Diriks",
+        "year_born": 1855
+      }
+    ]
+  },
+  {
+    "_id": 1860,
+    "count": 4,
+    "artists": [
+      {
+        "name": "Emil Bernard",
+        "year_born": 1868
+      },
+      {
+        "name": "Joszef Rippl-Ronai",
+        "year_born": 1861
+      },
+      {
+        "name": "Alfred Maurer",
+        "year_born": 1868
+      },
+      {
+        "name": "Edvard Munch",
+        "year_born": 1863
+      }
+    ]
+  },
+  {
+    "_id": 1870,
+    "count": 1,
+    "artists": [
+      {
+        "name": "Anna Ostroumova",
+        "year_born": 1871
+      }
+    ]
+  }
+]
+
 Benefits of Using $bucket:
 1. Data Grouping: Group continuous data into discrete(“পৃথক”) intervals, which is useful for creating histograms or summaries.
 2. Flexibility: You can define custom ranges based on your dataset.
@@ -1631,4 +1779,3 @@ Benefits of Using $bucket:
 4. Handling Outliers: The default option lets you categorize data that falls outside the defined bucket boundaries.
 
 The $bucket operator in MongoDB is an essential tool for organizing and summarizing data based on ranges. Whether you’re analyzing sales by price ranges, organizing users by age groups, or categorizing data into specific intervals, $bucket helps you easily define custom ranges and group data accordingly.
-*/
