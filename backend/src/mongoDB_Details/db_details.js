@@ -1523,3 +1523,112 @@ Ans: json->
 }
 
 */
+
+
+
+/*
+*** $bucket in Aggregation Pipeline ***
+The $bucket operator in MongoDB's aggregation framework is used for data bucketing, which is essential grouping data into discrete ranges or "buckets" based on the values in a specific field. This is particularly useful for generating histograms or summaries of data by dividing a continuous range of values into intervals. 
+
+For example, if you are dealing with numeric data (like ages, scores, prices, etc), you might want to categorize or group those values into different ranges to analyze trends or generate statistics for each group. This is where $bucket comes into play.
+
+How $bucket Works
+1. The $bucket operator groups input documents into buckets, each representing a specific ranges of values.
+2. You need to define boundaries that specify the range for each bucket.
+3. It outputs a count of the documents in each bucket, and you can also add additional computations like sum, average, etc. for each bucket.
+4. Documents with field values outside the specified boundaries can be optionally hanlded with an "overflow" (default: "Other") bucket.
+
+Basic Structure of $bucket
+Here is how $bucket is typically structured in a MongoDB aggregation pipeline:
+{
+  $bucket: {
+    groupBy: <expression>,       // Field or expression to group by (e.g., price, age)
+    boundaries: [<min>, <max>, ...], // Array of boundary values for the buckets
+    default: <default_bucket>,   // Optional: Where documents that don't fit into any bucket go
+    output: {                    // Optional: Additional output fields (aggregations within each bucket)
+      <field1>: { <accumulator> },
+      <field2>: { <accumulator> }
+    }
+  }
+}
+
+Example: Grouping people by age ranges
+Let's say you have a collection of people with an age field, and you want to group people into age ranges(e.g. 0-20, 20-40, 40-60, etc.). You can use $bucket to create these groups.
+db.people:
+[
+  { "_id": 1, "name": "Alice", "age": 25 },
+  { "_id": 2, "name": "Bob", "age": 30 },
+  { "_id": 3, "name": "Charlie", "age": 35 },
+  { "_id": 4, "name": "David", "age": 50 },
+  { "_id": 5, "name": "Eve", "age": 75 }
+]
+Aggregation with $bucket
+db.people.aggregate([
+  {
+    $bucket: {
+      groupBy: "$age",  // The field to group by
+      boundaries: [20, 40, 60, 80],  // Define the bucket boundaries
+      default: "Other", // Optional: Bucket for ages outside the defined boundaries
+      output: {
+        count: { $sum: 1 }  // Output field showing how many documents are in each bucket
+      }
+    }
+  }
+]);
+Explanation:
+a. groupBy: "$age" groups the documents based on the age field.
+b. boundaries: [20, 40, 60, 80] defines the boundaries for the buckets. This will create three buckets:-
+  1. First bucket: 20 <=age<40
+  2. Second bucket: 40<=age<60
+  3. Third bucket: 60<=age<80
+c. default: "Other" means documents where the age value is outside the specified boundaries will go into a bucket labeled "Other".
+d. output: In this example, we use $sum: 1 to count how many people are in each bucket.
+
+Ans: json->
+[
+  { "_id": 20, "count": 3 },  // Ages between 20 and 40: Alice (25), Bob (30), Charlie (35)
+  { "_id": 40, "count": 1 },  // Ages between 40 and 60: David (50)
+  { "_id": 60, "count": 1 },  // Ages between 60 and 80: Eve (75)
+  { "_id": "Other", "count": 0 }  // No people with age outside the boundaries
+]
+
+Examples grouping prices into ranges and summing total sales
+Let's say you have a products collection, and you want to group products by price ranges and sum up the total sales for each price group.
+
+db.products:
+[
+  { "_id": 1, "product": "A", "price": 10, "sales": 100 },
+  { "_id": 2, "product": "B", "price": 15, "sales": 200 },
+  { "_id": 3, "product": "C", "price": 30, "sales": 300 },
+  { "_id": 4, "product": "D", "price": 50, "sales": 400 },
+  { "_id": 5, "product": "E", "price": 75, "sales": 500 }
+]
+Aggregation with $bucket
+db.products.aggregate([
+  {
+    $bucket: {
+      groupBy: "$price",  // Group by the price field
+      boundaries: [0, 20, 40, 100],  // Price ranges: 0-20, 20-40, 40-100
+      default: "Other",   // Handle any prices outside the boundaries
+      output: {
+        totalSales: { $sum: "$sales" },  // Sum of sales for each price group
+        productCount: { $sum: 1 }        // Count of products in each bucket
+      }
+    }
+  }
+]);
+Ans: json->
+[
+  { "_id": 0, "totalSales": 300, "productCount": 2 },  // Products A and B (price: 10, 15)
+  { "_id": 20, "totalSales": 300, "productCount": 1 }, // Product C (price: 30)
+  { "_id": 40, "totalSales": 900, "productCount": 2 }, // Products D and E (price: 50, 75)
+  { "_id": "Other", "totalSales": 0, "productCount": 0 }  // No products with prices outside these ranges
+]
+Benefits of Using $bucket:
+1. Data Grouping: Group continuous data into discrete(“পৃথক”) intervals, which is useful for creating histograms or summaries.
+2. Flexibility: You can define custom ranges based on your dataset.
+3. Aggregated Results: The $bucket operator allows not only grouping but also performing additional calculations within each bucket(e.g. summing values or counting occurrences).
+4. Handling Outliers: The default option lets you categorize data that falls outside the defined bucket boundaries.
+
+The $bucket operator in MongoDB is an essential tool for organizing and summarizing data based on ranges. Whether you’re analyzing sales by price ranges, organizing users by age groups, or categorizing data into specific intervals, $bucket helps you easily define custom ranges and group data accordingly.
+*/
