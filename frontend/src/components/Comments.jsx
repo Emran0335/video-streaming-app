@@ -34,13 +34,14 @@ function Comments({ video }) {
         { content: JSON.stringify(data.content) },
         { withCredentials: true }
       );
+      return response?.data?.comments;
     } catch (error) {
       console.log("Error while adding comment", error);
     }
   };
   useEffect(() => {
     getVideoComments();
-  }, [videoId]);
+  }, [videoId, getVideoComments]);
 
   return (
     <div className="border rounded-xl mt-4 ml-1">
@@ -54,11 +55,11 @@ function Comments({ video }) {
           onSubmit={handleSubmit(handleCommentSubmit)}
           className="mt-3 mb-4 flex items-center"
         >
-          <div>
+          <div className="">
             <img
               src={video?.owner?.avatar}
               alt="user"
-              className="w-9 h-9 rounded-full mr-8 object-cover"
+              className="w-9 h-9 rounded-full mr-6 object-cover"
             />
           </div>
           <Input
@@ -84,21 +85,23 @@ function Comments({ video }) {
               key={comment._id}
               className="hover:bg-zinc-900 rounded-xl py-3 px-4"
             >
-              <div>
+              <div className="flex">
                 <img
                   src={`${comment?.owner?.avatar}`}
                   alt="User"
                   className="w-9 h-9 rounded-full object-cover"
                 />
-                <div>
-                  <div>
+                <div className="px-3 justify-start">
+                  <div className="flex text-gray-300 text-sm">
                     <p>@{comment?.owner?.username}</p>
-                    <p>{getTimeDistanceToNow(comment?.createdAt)}</p>
+                    <p className="ml-2">
+                      {getTimeDistanceToNow(comment?.createdAt)}
+                    </p>
                   </div>
-                  <div>{comment?.content}</div>
-                  <div>
+                  <div className="mt-1">{comment?.content}</div>
+                  <div className="mt-1 flex items-center text-sm">
                     <BiLike className="w-5 h-5" />
-                    <p>{video?.likesCount}</p>
+                    <p className="ml-1">{video?.likesCount}</p>
                   </div>
                 </div>
               </div>

@@ -6,29 +6,44 @@ import { Provider } from "react-redux";
 import store from "./store/store.js";
 import Home from "./pages/Home.jsx";
 import Search from "./pages/Search.jsx";
-import Video from "./pages/Video.jsx"
+import Video from "./pages/Video.jsx";
 import Login from "./pages/Login.jsx";
+import SignUp from "./pages/SignUp.jsx";
+import LikedVideos from "./pages/LikedVideos.jsx";
+import History from "./pages/History.jsx";
 
 const router = createBrowserRouter([
-  {
-    path: "/login",
-    element: <Login />
-  },
   {
     path: "/",
     element: <App />,
     children: [
       {
         path: "/",
-        element: <Home />
+        element: <Home />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <SignUp />,
       },
       {
         path: "/search/:query",
-        element: <Search />
+        element: <Search />,
       },
       {
         path: "/watchpage/:videoId",
-        element: <Video />
+        element: <Video />,
+      },
+      {
+        path: "/liked-videos",
+        element: <LikedVideos />
+      },
+      {
+        path: "/history",
+        element: <History />
       }
     ],
   },

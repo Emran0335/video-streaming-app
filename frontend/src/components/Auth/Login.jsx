@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import Logo from "../Logo";
 import Input from "../Input";
 import Button from "../Button";
-import { icons } from "../../assets/icons";
+import { icons } from "../../assets/Icons.jsx";
 import axios from "axios";
 
 function Login() {
@@ -29,12 +29,20 @@ function Login() {
         withCredentials: true,
       });
       if (response?.data?.data) {
-        dispatch(setUser(response.data.data));
+        dispatch(setUser(response.data.data.user));
         toast.success(response.data.message + "😂");
         navigate("/");
       }
     } catch (error) {
-      setError(error.message);
+      if (error.status === 401) {
+        setError("Invalid password");
+      } else if (error.status === 500) {
+        setError("Server is not working");
+      } else if (error.status === 404) {
+        setError("User does not exist");
+      } else {
+        setError(error.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -43,7 +51,9 @@ function Login() {
     <div className="h-screen w-full overflow-y-auto bg-[#121212] text-white">
       <div className="mx-auto my-28 flex w-full max-w-sm flex-col px-4 border p-8 border-gray-600">
         <div className="mx-auto inline-block">
-          <Logo />
+          <Link to="/">
+            <Logo />
+          </Link>
         </div>
         <div className="my-4 w-full text-center text-xl font-semibold">
           Log in to your account
@@ -92,7 +102,7 @@ function Login() {
             type="submit"
             disable={loading}
             className="mt-5 disabled:cursor-not-allowed py-2 rounded-lg"
-            bgColor="bg-pink-600"
+            bgColor={loading ? "bg-pink-800" : "bg-pink-600"}
           >
             {loading ? <span>{icons.loading}</span> : "Sign in"}
           </Button>

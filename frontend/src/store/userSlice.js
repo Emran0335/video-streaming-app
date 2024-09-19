@@ -7,6 +7,7 @@ const initialState = {
   userPlaylist: null,
   userTweets: null,
   userLikedVideos: null,
+  userHistory: null,
 };
 
 const userSlice = createSlice({
@@ -31,6 +32,9 @@ const userSlice = createSlice({
     addUserLikedVideos: (state, action) => {
       state.userLikedVideos = action.payload;
     },
+    addUserHistory: (state, aciton) => {
+      state.userHistory = action.payload;
+    },
   },
 });
 export const {
@@ -40,6 +44,7 @@ export const {
   addUserPlaylist,
   addUserTweets,
   addUserLikedVideos,
+  addUserHistory,
 } = userSlice.actions;
 
 export default userSlice.reducer;
