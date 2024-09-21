@@ -469,14 +469,18 @@ const getWatchHistory = asyncHandler(async (req, res) => {
               ],
             },
           },
-          // // as owner is array, so first object of array is added
-          // {
-          //   $addFields: {
-          //     owner: {
-          //       $first: "$owner",
-          //     },
-          //   },
-          // },
+          {
+            $addFields: {
+              owner: {
+                $first: "$owner",
+              },
+            },
+          },
+          {
+            $sort: {
+              updatedAt: -1,
+            },
+          },
         ],
       },
     },
