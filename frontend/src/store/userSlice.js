@@ -32,7 +32,7 @@ const userSlice = createSlice({
     addUserLikedVideos: (state, action) => {
       state.userLikedVideos = action.payload;
     },
-    addUserHistory: (state, aciton) => {
+    addUserHistory: (state, action) => {
       state.userHistory = action.payload;
     },
   },

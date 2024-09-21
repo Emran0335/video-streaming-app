@@ -6,6 +6,7 @@ export const getUserHistory = async (dispatch) => {
     const response = await axios.get("/api/v1/users/history", {
       withCredentials: true,
     });
+
     if (response?.data?.data) {
       dispatch(addUserHistory(response.data.data));
       return response.data;
