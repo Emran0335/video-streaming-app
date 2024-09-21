@@ -1,3 +1,5 @@
+*** MongoDB And Aggregation pipeline ***
+
 
 1. db.collection.find()
 The find() method in MongoDB is one of the most commonly used methods to retrieve documents from a collection. It allows you to query a collection and return documents that match a given criteria(filter). It is powerful and flexible, supporting complex queries and projections.
@@ -1779,3 +1781,30 @@ Benefits of Using $bucket:
 4. Handling Outliers: The default option lets you categorize data that falls outside the defined bucket boundaries.
 
 The $bucket operator in MongoDB is an essential tool for organizing and summarizing data based on ranges. Whether you’re analyzing sales by price ranges, organizing users by age groups, or categorizing data into specific intervals, $bucket helps you easily define custom ranges and group data accordingly.
+
+
+
+
+
+
+To retrieve the first element of an array: $first: "$array_name"
+
+$first is used in a MongoDB aggregation pipeline, and it works as part of the $addFields, $group or similar stages. It means that we are extracting the first element from an array or selecting the first field from the grouped documents.
+
+videos collecton:
+[
+  { "_id": 1, "title": "Video 1", "owner": ["Alice", "Bob"] },
+  { "_id": 2, "title": "Video 2", "owner": ["Charlie", "David"] }
+]
+db.videos.aggregate([
+  {
+    $addFields: {
+      firstOwner: { $first: "$owner" }  // Extracting the first owner
+    }
+  }
+]);
+Ans: json-> 
+[
+  { "_id": 1, "title": "Video 1", "owner": ["Alice", "Bob"], "firstOwner": "Alice" },
+  { "_id": 2, "title": "Video 2", "owner": ["Charlie", "David"], "firstOwner": "Charlie" }
+]
