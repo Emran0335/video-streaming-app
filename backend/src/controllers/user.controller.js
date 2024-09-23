@@ -12,39 +12,27 @@ import {
 
 // to delete files from the local file system
 function unlinkPath(avatarLocalPath, coverImageLocalPath) {
-  try {
-    if (avatarLocalPath) fs.unlinkSync(avatarLocalPath);
-  } catch (error) {
-    console.error(`Failed to delete avatar at path ${avatarLocalPath}`);
-  }
-  try {
-    if (coverImageLocalPath) fs.unlinkSync(coverImageLocalPath);
-  } catch (error) {
-    console.error(
-      `Failed to delete cover image at path ${coverImageLocalPath}`
-    );
-  }
+  if (avatarLocalPath) fs.unlinkSync(avatarLocalPath);
+  if (coverImageLocalPath) fs.unlinkSync(coverImageLocalPath);
 }
 
 // for the creation of token
-const generateAccessAndRefreshTokens = async (userId) => {
+const generateAccessAndRefreshTokens = async (userId, val = 0) => {
   try {
     const user = await User.findById(userId);
     // from the customized method of the class userSchema, generateAccessToken
     // but it is found to the return value i.e - user of the User collection
     const accessToken = user.generateAccessToken();
-    const refreshToken = user.generateRefreshToken();
-
-    // refreshToken should be customized to user object
-    user.refreshToken = refreshToken;
-
-    // refreshtoken should be saved to database for further use.
-    await user.save({ validateBeforeSave: false });
-
-    return {
-      accessToken,
-      refreshToken,
-    };
+    if (val === 0) {
+      // refreshToken should be customized to user object
+      // user.refreshToken = refreshToken;
+      // refreshtoken should be saved to database for further use.
+      const refreshToken = user.generateRefreshToken();
+      user.refreshToken = refreshToken;
+      await user.save({ validateBeforeSave: false });
+      return { accessToken, refreshToken };
+    }
+    return { accessToken };
   } catch (error) {
     throw new ApiError(500, "Something went wrong while generating token");
   }
@@ -220,7 +208,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       inComingRefreshToken,
       process.env.REFRESH_TOKEN_SECRET
     );
-    const user = User.findById(decodedToken?._id);
+    const user = await User.findById(decodedToken?._id);
     if (!user) {
       throw new ApiError(401, "Invalid Refresh Token!");
     }
@@ -234,20 +222,16 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       secure: true,
     };
 
-    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-      user._id
-    );
+    const { accessToken } = await generateAccessAndRefreshTokens(user._id, 1);
 
     return res
       .status(200)
       .cookie("accessToken", accessToken, options)
-      .cookie("refreshToken", refreshToken, options)
       .json(
         new ApiResponse(
           200,
           {
             accessToken,
-            refreshToken,
           },
           "Access token refreshed!"
         )
