@@ -13,25 +13,31 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
     if (!token) {
       throw new ApiError(401, "Unauthrized request!");
     }
+    jwt.verify(
+      token,
+      process.env.ACCESS_TOKEN_SECRET,
+      async (err, decodedToken) => {
+        if (err) {
+          if (err.name === "TokenExpiredError") {
+            return next(new ApiError(401, "TokenExpiredError"));
+          }
+          return next(new ApiError(401, "Invalid access token"));
+        }
+        const user = await User.findById(decodedToken?._id).select(
+          "-password -refreshToken"
+        );
 
-    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
-    const user = await User.findById(decodedToken?._id).select(
-      "-password -refreshToken"
+        if (!user) {
+          throw new ApiError(401, "Invalid AccessToken");
+        }
+        // new object should be added to the req object.
+        req.user = user;
+        next();
+      }
     );
-
-    if (!user) {
-      // Frontend_Disscuss: discuss about frontend
-      throw new ApiError(401, "Invalid Access Token!");
-    }
-
-    // new object should be added to the req object.
-    req.user = user;
-    // console.log(req.user?._id.toString())
-    next();
   } catch (error) {
     throw new ApiError(401, error?.message || "Invalid Access Token!");
   }
 });
 
-// all select, and then trycatch suggestion use to get all the code into the try block and catch also come with empty code. It's a shortcut way of using trycatch block if we forget to use it from the beginning.
+// select all and then trycatch suggestion should be used to get all the code into the tryandcatch block. It's a shortcut way of using trycatch block if we forget to use it from the beginning.

@@ -1803,6 +1803,7 @@ db.videos.aggregate([
     }
   }
 ]);
+
 Ans: json-> 
 [
   { "_id": 1, "title": "Video 1", "owner": ["Alice", "Bob"], "firstOwner": "Alice" },
