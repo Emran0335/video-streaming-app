@@ -48,7 +48,7 @@ function VideoContainer() {
     <div className="overflow-hidden mt-5">
       <div className="flex flex-wrap justify-around">
         {videos?.map((video) => (
-          <VideoCard key={video?._id} video={video} />
+          <VideoCard key={video?._id} video={video} name={video?.owner?.username} />
         ))}
       </div>
     </div>

@@ -1,15 +1,17 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import formatDuration from "../../utils/formatDuration.js";
 import getTimeDistanceToNow from "../../utils/getTimeDistance.js";
 
-function VideoCard({ video }) {
+function VideoCard({ video, name }) {
+  console.log("name", name);
   const formattedDuration = formatDuration(parseInt(video?.duration));
   const timeDistance = getTimeDistanceToNow(video?.createdAt);
+  const navigate = useNavigate();
 
   const handleChannelClick = (e) => {
     e.preventDefault();
-    Navigate(`/channel/${video?.owner?.username}`);
+    navigate(`/channel/${video?.owner?.username}`);
   };
 
   return (
@@ -22,7 +24,7 @@ function VideoCard({ video }) {
         />
         <p className="absolute bottom-24 right-4">{formattedDuration}</p>
         <div className="flex">
-          <div onClick={handleChannelClick}>
+          <div onClick={handleChannelClick} className="mt-1">
             <img
               className="w-9 h-9 bg-gray-100 rounded-full object-cover"
               src={video?.owner?.avatar}
@@ -31,7 +33,9 @@ function VideoCard({ video }) {
           </div>
           <div className="ml-4">
             <h2 className="text-lg font-semibold">{video?.title}</h2>
-            <h2 className="text-gray-200">{video?.owner?.fullName}</h2>
+            {name && (
+              <h2 className="text-gray-200">{video?.owner?.fullName}</h2>
+            )}
             <p className="text-gray-300 text-[0.95rem]">{`${video?.views} views * ${timeDistance}`}</p>
           </div>
         </div>

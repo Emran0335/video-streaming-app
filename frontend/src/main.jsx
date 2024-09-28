@@ -11,6 +11,10 @@ import Login from "./pages/Login.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import LikedVideos from "./pages/LikedVideos.jsx";
 import History from "./pages/History.jsx";
+import Channel from "./pages/Channel.jsx";
+import Settings from "./pages/Settings.jsx";
+import Support from "./pages/Support.jsx";
+import ChannelVideos from "./components/Channel/ChannelVideos.jsx";
 
 const router = createBrowserRouter([
   {
@@ -39,12 +43,42 @@ const router = createBrowserRouter([
       },
       {
         path: "/liked-videos",
-        element: <LikedVideos />
+        element: <LikedVideos />,
       },
       {
         path: "/history",
-        element: <History />
-      }
+        element: <History />,
+      },
+      {
+        path: "/settings",
+        element: <Settings />,
+      },
+      {
+        path: "/support",
+        element: <Support />,
+      },
+      {
+        path: "/channel/:username",
+        element: <Channel />,
+        children: [
+          {
+            path: "/channel/:username",
+            element: <ChannelVideos />,
+          },
+          {
+            path: "/channel/:username/tweets",
+          },
+          {
+            path: "/channel/:username/playlist",
+          },
+          {
+            path: "/channel/:username/subscribers",
+          },
+          {
+            path: "/channel/:username/about",
+          },
+        ],
+      },
     ],
   },
 ]);

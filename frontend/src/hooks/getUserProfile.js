@@ -1,11 +1,12 @@
-import axios from "axios";
+import axiosInstance from "../utils/axios.helper.js";
+import { addUser } from "../store/userSlice.js";
 
 export const getUserProfile = async (dispatch, username) => {
   try {
-    const response = await axios.get(`/api/v1/users/c/${username}`, {
-      withCredentials: true,
-    });
+    const response = await axiosInstance.get(`/users/c/${username}`);
+
     if (response?.data?.data) {
+      dispatch(addUser(response.data.data));
       return response.data;
     }
   } catch (error) {
