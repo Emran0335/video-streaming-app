@@ -4,35 +4,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { addVideos } from "../../store/videosSlice";
 import { FaVideo } from "react-icons/fa";
 import VideoCard from "./VideoCard";
+import axiosInstance from "../../utils/axios.helper";
 
 function VideoContainer() {
-  const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const { videos } = useSelector((state) => state.videos);
-  console.log("videos", videos);
 
   const getVideoData = async () => {
     try {
-      const response = await axios.get("/api/v1/videos", {
-        withCredentials: true,
-      });
+      const response = await axiosInstance.get("/videos");
       if (response?.data?.data?.length > 0) {
         dispatch(addVideos(response?.data?.data));
       }
     } catch (error) {
-      setError("Failed to fetch videos and add to store slice", error);
+      console.log(error);
     }
   };
 
   useEffect(() => {
-    if (!videos) {
-      getVideoData();
-    }
-  }, [videos]);
-
-  if (error) {
-    return <div>{error}</div>;
-  }
+    getVideoData();
+  }, []);
 
   if (!videos || videos.length === 0) {
     return (
@@ -48,7 +39,7 @@ function VideoContainer() {
     <div className="overflow-hidden mt-5">
       <div className="flex flex-wrap justify-around">
         {videos?.map((video) => (
-          <VideoCard key={video?._id} video={video} name={video?.owner?.username} />
+          <VideoCard key={video?._id} video={video} />
         ))}
       </div>
     </div>

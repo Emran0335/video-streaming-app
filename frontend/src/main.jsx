@@ -15,6 +15,7 @@ import Channel from "./pages/Channel.jsx";
 import Settings from "./pages/Settings.jsx";
 import Support from "./pages/Support.jsx";
 import ChannelVideos from "./components/Channel/ChannelVideos.jsx";
+import ChannelTweets from "./pages/ChannelTweets.jsx";
 
 const router = createBrowserRouter([
   {
@@ -67,6 +68,7 @@ const router = createBrowserRouter([
           },
           {
             path: "/channel/:username/tweets",
+            element: <ChannelTweets />
           },
           {
             path: "/channel/:username/playlist",

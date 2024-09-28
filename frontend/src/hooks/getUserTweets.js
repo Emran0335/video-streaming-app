@@ -1,11 +1,9 @@
-import axios from "axios";
+import axiosInstance from "../utils/axios.helper";
 import { addUserTweets } from "../store/userSlice";
 
 export const getUserTweets = async (dispatch, userId) => {
   try {
-    const response = await axios.get(`/api/v1/tweets/user/${userId}`, {
-      withCredentials: true,
-    });
+    const response = await axiosInstance.get(`/tweets/user/${userId}`);
     if (response?.data?.data) {
       dispatch(addUserTweets(response.data.data));
       return response.data;

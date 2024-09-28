@@ -1,19 +1,83 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import getTimeDistanceToNow from "../../utils/getTimeDistance";
-import { useSelector } from "react-redux";
-import { BiLike } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { BiLike, BiSolidLike } from "react-icons/bi";
 import Button from "../Button";
 import { FaBell, FaChevronDown, FaChevronUp, FaSave } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import axiosInstance from "../../utils/axios.helper";
+import { setVideo } from "../../store/videoSlice";
+import { toast } from "react-toastify";
+import LoginPopup from "../Auth/LoginPopup";
 
 function VideoInfo({ video }) {
-    console.log(video?.createdAt)
   const timeDistance = getTimeDistanceToNow(video?.createdAt);
   const authStatus = useSelector((state) => state.auth.status);
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const LoginLikePopupDialog = useRef();
+  const LoginSubsPopupDialog = useRef();
+  const location = useLocation();
+  const dispatch = useDispatch();
 
   const toggleDescription = () => {
     setShowFullDescription(!showFullDescription);
+  };
+  const toggleVideoLike = async () => {
+    if (!authStatus) {
+      LoginLikePopupDialog.current.open();
+    } else {
+      try {
+        const response = await axiosInstance.post(
+          `/likes/toggle/v/${video._id}`
+        );
+        if (response.data.success) {
+          dispatch(
+            setVideo({
+              ...video,
+              isLiked: !video.isLiked,
+              likesCount: video.isLiked
+                ? video.likesCount - 1
+                : video.likesCount + 1,
+            })
+          );
+        }
+      } catch (error) {
+        toast.error("Error while toggling like button");
+        console.log(error);
+      }
+    }
+  };
+  const toggleSubscribe = async () => {
+    if (!authStatus) {
+      LoginSubsPopupDialog.current.open();
+    } else {
+      try {
+        const response = await axiosInstance.post(
+          `/subscriptions/c/${video.owner._id}`
+        );
+        if (response.data.success) {
+          dispatch(
+            setVideo({
+              ...video,
+              owner: {
+                ...video.owner,
+                isSubscribed: !video.owner.isSubscribed,
+                subscriberCount: video.owner.isSubscribed
+                  ? video.owner.subscriberCount - 1
+                  : video.owner.subscriberCount - 1,
+              },
+            })
+          );
+        }
+      } catch (error) {
+        if (error.status === 403) {
+          toast.error("Cannot subscribe to your own channel");
+        } else {
+          toast.error("Error while toggling subscribe button");
+          console.log(error);
+        }
+      }
+    }
   };
   return (
     <div className="border rounded-xl px-4 py-2 ml-1 mt-2 bg-opacity-5">
@@ -23,14 +87,24 @@ function VideoInfo({ video }) {
           <p className="text-[0.9rem] text-gray-300">{`${video?.views} views * ${timeDistance}`}</p>
         </div>
         <div className="py-1 flex h-11">
-          <button
-            className={`px-3 border rounded-lg border-gray-400 flex items-center hover:bg-gray-900 ${
-              video.isLiked ? "text-blue-500" : ""
-            }`}
-          >
-            <p className="mr-1">{video?.likesCount}</p>
-            <BiLike className="w-5 h-5" />
-          </button>
+          <>
+            <LoginPopup
+              ref={LoginLikePopupDialog}
+              message="Login to like Video..."
+              route={location.pathname}
+            />
+            <button
+              className={`px-3 border rounded-lg border-gray-400 flex items-center hover:bg-gray-900`}
+              onClick={toggleVideoLike}
+            >
+              <p className="mr-1">{video?.likesCount}</p>
+              {video.isLiked ? (
+                <BiSolidLike className="w-50 h-5" />
+              ) : (
+                <BiLike className="w-5 h-5" />
+              )}
+            </button>
+          </>
           <Button className="border rounded-lg border-gray-400 ml-2 flex items-center hover:bg-gray-900">
             <FaSave className="mr-1" />
             Save

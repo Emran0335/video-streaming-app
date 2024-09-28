@@ -7,6 +7,8 @@ import VideoPlayer from "../components/Video/VideoPlayer.jsx";
 import VideoInfo from "../components/Video/VideoInfo.jsx";
 import VideoListCard from "../components/Video/VideoListCard.jsx";
 import Comments from "../components/Comments.jsx";
+import axiosInstance from "../utils/axios.helper.js";
+import { addVideos } from "../store/videosSlice.js";
 
 function Video() {
   const dispatch = useDispatch();
@@ -15,13 +17,12 @@ function Video() {
   const { videoId } = useParams();
   const { videos } = useSelector((state) => state.videos);
   const { video } = useSelector((state) => state.video);
-  console.log(videos);
+  const authStatus = useSelector((state) => state.auth.status);
+
   const fetchVideo = async () => {
     setError("");
     try {
-      const response = await axios.get(`/api/v1/videos/${videoId}`, {
-        withCredentials: true,
-      });
+      const response = await axiosInstance.get(`/videos/${videoId}`);
       if (response?.data?.data) {
         dispatch(setVideo(response.data.data));
       }
@@ -32,9 +33,21 @@ function Video() {
       setLoading(false);
     }
   };
+  const fetchVideos = async () => {
+    try {
+      const response = await axiosInstance.get("/videos");
+      if (response?.data?.data?.length > 0) {
+        dispatch(addVideos(response?.data?.data));
+      }
+    } catch (error) {
+      console.log("Error while fetching videos ", error);
+    }
+  };
   useEffect(() => {
     fetchVideo();
-  }, [videoId]);
+    if (!videos) fetchVideos();
+  }, [videoId, authStatus]);
+
   return (
     <div>
       {loading ? (
