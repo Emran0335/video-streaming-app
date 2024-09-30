@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { BiLike, BiSolidLike } from "react-icons/bi";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
-import Input from "./Input";
-import Button from "./Button";
-import getTimeDistanceToNow from "../utils/getTimeDistance.js";
-import { BiLike, BiSolidLike } from "react-icons/bi";
-import axiosInstance from "../utils/axios.helper.js";
 import { toast } from "react-toastify";
 import { icons } from "../assets/Icons.jsx";
+import axiosInstance from "../utils/axios.helper.js";
+import getTimeDistanceToNow from "../utils/getTimeDistance.js";
 import LoginPopup from "./Auth/LoginPopup.jsx";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import Button from "./Button";
+import Input from "./Input";
 
 function Comments({ video }) {
   const [loading, setLoading] = useState(true);
@@ -28,7 +28,9 @@ function Comments({ video }) {
   } = useForm();
   const LoginPopupDialog = useRef();
   const LoginLikePopupDialog = useRef();
-  const menuRefs = useRef();
+  const menuRefs = useRef([]);
+  const refResult = (menuRefs.current.some(ref=> ref));
+  console.log(refResult);
   const location = useLocation();
 
   const getVideoComments = async () => {
