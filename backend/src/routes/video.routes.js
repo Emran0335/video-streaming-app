@@ -9,13 +9,16 @@ import {
 } from "../controllers/video.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { checkUser } from "../middlewares/openAuth.middleware.js";
 
 const router = Router();
-router.use(verifyJWT);
 
 // for testing video data in the frontend
 router.route("/").get(getAllVideos);
-router.route("/:videoId").get(getVideoById);
+router.route("/c/:userId").get(getUserVideos);
+router.route("/:videoId").get(checkUser, getVideoById);
+
+router.use(verifyJWT);
 
 // all routes of videos
 router.route("/").post(
