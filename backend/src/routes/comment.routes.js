@@ -6,11 +6,15 @@ import {
   deleteComment,
   updateComment,
 } from "../controllers/comment.controller.js";
+import { checkUser } from "../middlewares/openAuth.middleware.js";
 
 const router = Router();
+
+router.route("/:videoId").get(checkUser, getVideoComments);
+
 router.use(verifyJWT);
 
-router.route("/:videoId").get(getVideoComments).post(addComment);
+router.route("/:videoId").post(addComment);
 router.route("/c/:commentId").delete(deleteComment).patch(updateComment);
 
 export default router;
