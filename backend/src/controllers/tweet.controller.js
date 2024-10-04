@@ -125,4 +125,6 @@ const deleteTweet = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, deletedTweet, "Tweet deleted successfully"));
 });
 
-export { createTweet, getUserTweets, updateTweet, deleteTweet };
+const getAllTweets = asyncHandler(async(req, res)=> {})
+
+export { createTweet, getUserTweets, updateTweet, deleteTweet, getAllTweets };
