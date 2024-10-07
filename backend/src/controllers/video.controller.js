@@ -2,6 +2,7 @@ import fs from "fs";
 import mongoose, { isValidObjectId } from "mongoose";
 import { User } from "../models/user.model.js";
 import { Video } from "../models/video.model.js";
+import { Subscription } from "../models/subscription.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -169,6 +170,91 @@ const getUserVideos = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, videos, "Videos fetched successfully"));
+});
+
+const getSubscribedVideos = asyncHandler(async (req, res) => {
+  const { page = 1, limit = 10, sortType = "desc" } = req.query;
+
+  // select("channel") ensures only to return channel filed
+  const subscriptions = await Subscription.find({
+    subscriber: new mongoose.Types.ObjectId(req.user?._id),
+  }).select("channel");
+
+  const channelIds = subscriptions.map((sub) => sub.channel);
+
+  if (channelIds.length === 0) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, [], "No subscribed channels found"));
+  }
+  const id = channelIds.map((id) => new mongoose.Types.ObjectId(id));
+  console.log(id);
+  const videos = await Video.aggregate([
+    {
+      $match: {
+        owner: {
+          $in: channelIds.map((id) => new mongoose.Types.ObjectId(id)),
+        },
+      },
+    },
+    {
+      $sort: {
+        createdAt: sortType === "asc" ? 1 : -1,
+      },
+    },
+    {
+      $skip: (page - 1) * limit,
+    },
+    {
+      $limit: parseInt(limit),
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+        pipeline: [
+          {
+            $project: {
+              avatar: 1,
+              username: 1,
+              fullName: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        owner: {
+          $first: "$owner",
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        owner: 1,
+        videoFile: 1,
+        thumbnail: 1,
+        createdAt: 1,
+        description: 1,
+        title: 1,
+        duration: 1,
+        views: 1,
+        isPublished: 1,
+      },
+    },
+  ]);
+  if (!videos) {
+    throw new ApiError(404, "Error while fetching videos");
+  }
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, videos, "Subscribed videos fetched successfully")
+    );
 });
 
 const publishAVideo = asyncHandler(async (req, res) => {
@@ -472,12 +558,14 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
       )
     );
 });
-const getSubscribedVideos=asyncHandler(async(req, res)=> {})
+
 export {
   deleteVideo,
-  getAllVideos, getSubscribedVideos, getUserVideos, getVideoById,
+  getAllVideos,
+  getSubscribedVideos,
+  getUserVideos,
+  getVideoById,
   publishAVideo,
   togglePublishStatus,
-  updateVideo
+  updateVideo,
 };
-

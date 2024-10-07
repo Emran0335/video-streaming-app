@@ -37,21 +37,21 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
   if (!commentId || !isValidObjectId(commentId)) {
     throw new ApiError(400, "No valid comment Id found");
   }
-  const isLikedComment = await Like.findOne({
+  const isLiked = await Like.findOne({
     comment: commentId,
     likedBy: req.user?._id,
   });
-  if (isLikedComment) {
-    const removeLikedComment = await Like.findByIdAndDelete(isLikedComment._id);
-    if (!removeLikedComment) {
+  if (isLiked) {
+    const removeLiked = await Like.findByIdAndDelete(isLiked._id);
+    if (!removeLiked) {
       throw new ApiError(500, "Error while removing liked comment");
     }
   } else {
-    const likedComment = await Like.create({
+    const liked = await Like.create({
       comment: commentId,
       likedBy: req.user?._id,
     });
-    if (!likedComment) {
+    if (!liked) {
       throw new ApiError(500, "Error while liking comment");
     }
   }
@@ -66,21 +66,21 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
   if (!tweetId || !isValidObjectId(tweetId)) {
     throw new ApiError(400, "No valid tweet Id found");
   }
-  const isLikedTweet = await Like.findOne({
+  const isLiked = await Like.findOne({
     tweet: tweetId,
     likedBy: req.user?._id,
   });
-  if (isLikedTweet) {
-    const removeLikedTweet = await Like.findByIdAndDelete(isLikedTweet._id);
-    if (!removeLikedTweet) {
+  if (isLiked) {
+    const removeLike = await Like.findByIdAndDelete(isLiked._id);
+    if (!removeLike) {
       throw new ApiError(500, "Error while removing liked tweet");
     }
   } else {
-    const likedTweet = await Like.create({
+    const liked = await Like.create({
       tweet: tweetId,
       likedBy: req.user?._id,
     });
-    if (!likedTweet) {
+    if (!liked) {
       throw new ApiError(500, "Error while liking tweet");
     }
   }

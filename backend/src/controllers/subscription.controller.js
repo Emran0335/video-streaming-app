@@ -108,20 +108,43 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
         from: "users",
         localField: "channel",
         foreignField: "_id",
-        as: "channels",
+        as: "channelDetails",
+      },
+    },
+    {
+      $unwind: "$channelDetails",
+    },
+    {
+      $lookup: {
+        from: "subscriptions",
+        localField: "channel",
+        foreignField: "channel",
+        as: "channelSubscribers",
       },
     },
     {
       $addFields: {
-        channels: {
-          $first: "$channels",
+        "channelDetails.isSubscribed": {
+          $cond: {
+            if: {
+              $in: [
+                new mongoose.Types.ObjectId(req.user?._id),
+                "$channelSubscribers.subscriber",
+              ],
+            },
+            then: true,
+            else: false,
+          },
+        },
+        "channelDetails.subscribersCount": {
+          $size: "$channelSubscribers",
         },
       },
     },
     {
       $group: {
         _id: null,
-        channels: { $push: "$channels" },
+        channels: { $push: "$channelDetails" },
         totalChannels: { $sum: 1 },
       },
     },
@@ -130,6 +153,8 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
         _id: 0,
         channels: {
           _id: 1,
+          isSubscribed: 1,
+          subscribersCount: 1,
           username: 1,
           fullName: 1,
           avatar: 1,
@@ -146,7 +171,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        subscribedChannels,
+        subscribedChannels[0],
         "Subscribed channels fetched succcessfully"
       )
     );

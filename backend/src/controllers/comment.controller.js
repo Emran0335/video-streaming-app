@@ -26,16 +26,21 @@ const getVideoComments = asyncHandler(async (req, res) => {
         pipeline: [
           {
             $project: {
-              username: 1,
               _id: 1,
+              username: 1,
               avatar: 1,
             },
           },
         ],
       },
     },
+    // $unwind: "$owner", // Flatten the array to get owner's details, OR
     {
-      $unwind: "$owner", // Flatten the array to get owner's details
+      $addFields: {
+        owner: {
+          $first: "$owner",
+        },
+      },
     },
     {
       $lookup: {
@@ -50,6 +55,13 @@ const getVideoComments = asyncHandler(async (req, res) => {
         likesCount: {
           $size: "$likes",
         },
+        isLiked: {
+          $cond: {
+            if: { $sin: [req.user?._id, "$likes.likedBy"] },
+            then: true,
+            else: false,
+          },
+        },
       },
     },
     {
@@ -58,9 +70,15 @@ const getVideoComments = asyncHandler(async (req, res) => {
         username: 1,
         avatar: 1,
         likesCount: 1,
+        isLiked: 1,
         content: 1,
         owner: 1,
-        createdAt:1,
+        createdAt: 1,
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
       },
     },
     {
@@ -70,34 +88,41 @@ const getVideoComments = asyncHandler(async (req, res) => {
       $limit: parseInt(limit),
     },
   ]);
-  if (!getComments || getComments.length == 0) {
+  if (!getComments) {
     throw new ApiError(501, "No comments found");
   }
   return res
     .status(200)
     .json(new ApiResponse(200, getComments, "Comments fetched successfully"));
 });
+
 const addComment = asyncHandler(async (req, res) => {
   const { content } = req.body;
   const { videoId } = req.params;
+
   if (!content?.trim()) {
     throw new ApiError(400, "Comment cannot be empty");
   }
+
   if (!videoId || !isValidObjectId(videoId)) {
     throw new ApiError(400, "Invalid video Id");
   }
+
   const comment = await Comment.create({
     content,
     video: videoId,
     owner: req.user?._id,
   });
+
   if (!comment) {
     throw new ApiError(500, "Error while adding comment");
   }
+
   return res
     .status(200)
     .json(new ApiResponse(200, comment, "Comment added successfully"));
 });
+
 const updateComment = asyncHandler(async (req, res) => {
   const { content } = req.body;
   const { commentId } = req.params;
@@ -105,19 +130,24 @@ const updateComment = asyncHandler(async (req, res) => {
   if (!content?.trim()) {
     throw new ApiError(400, "Comment cannot be empty");
   }
+
   if (!commentId || !isValidObjectId(commentId)) {
     throw new ApiError(400, "Invalid comment Id");
   }
+
   const comment = await Comment.findById(commentId);
+
   if (!comment) {
     throw new ApiError(500, "Comment not found");
   }
+
   if (comment.owner.toString() !== req.user?._id.toString()) {
     throw new ApiError(
       401,
       "You do not have permission to update this commnet"
     );
   }
+
   const updateComment = await Comment.findByIdAndUpdate(
     commentId,
     {
@@ -127,9 +157,11 @@ const updateComment = asyncHandler(async (req, res) => {
       new: true,
     }
   );
+
   if (!updateComment) {
     throw new ApiError(400, "Error while updating comment");
   }
+
   return res
     .status(200)
     .json(new ApiResponse(200, updateComment, "Comment updated successfully"));
@@ -137,17 +169,23 @@ const updateComment = asyncHandler(async (req, res) => {
 
 const deleteComment = asyncHandler(async (req, res) => {
   const { commentId } = req.params;
+
   if (!commentId || !isValidObjectId(commentId)) {
     throw new ApiError(400, "Invalid comment Id");
   }
+
   const comment = await Comment.findById(commentId);
+
   if (!comment) {
     throw new ApiError(500, "Comment not found");
   }
+
   if (comment.owner.toString() !== req.user?._id.toString()) {
     throw new ApiError(401, "You do not permission to delete this comment");
   }
+
   const deletedComment = await Comment.findByIdAndDelete(commentId);
+
   if (!deletedComment) {
     throw new ApiError(400, "Error while deleting comment");
   }
