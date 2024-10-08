@@ -18,6 +18,17 @@ const getVideoComments = asyncHandler(async (req, res) => {
       },
     },
     {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+    {
+      $skip: (page - 1) * limit,
+    },
+    {
+      $limit: parseInt(limit),
+    },
+    {
       $lookup: {
         from: "users",
         localField: "owner",
@@ -57,7 +68,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
         },
         isLiked: {
           $cond: {
-            if: { $sin: [req.user?._id, "$likes.likedBy"] },
+            if: { $in: [req.user?._id, "$likes.likedBy"] },
             then: true,
             else: false,
           },
@@ -76,20 +87,9 @@ const getVideoComments = asyncHandler(async (req, res) => {
         createdAt: 1,
       },
     },
-    {
-      $sort: {
-        createdAt: -1,
-      },
-    },
-    {
-      $skip: (page - 1) * limit,
-    },
-    {
-      $limit: parseInt(limit),
-    },
   ]);
   if (!getComments) {
-    throw new ApiError(501, "No comments found");
+    throw new ApiError(501, "Error while fetching comments");
   }
   return res
     .status(200)

@@ -227,6 +227,8 @@ const updatePlaylist = asyncHandler(async (req, res) => {
     );
 });
 
+const getVideoPlaylist = asyncHandler(async (req, res) => {});
+
 export {
   addVideoToPlaylist,
   createPlaylist,
@@ -235,4 +237,5 @@ export {
   getUserPlaylists,
   removeVideoFromPlaylist,
   updatePlaylist,
+  getVideoPlaylist,
 };
