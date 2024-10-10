@@ -55,6 +55,7 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
       throw new ApiError(500, "Error while liking comment");
     }
   }
+
   return res
     .status(200)
     .json(new ApiResponse(200, {}, "Liked comment status updated"));
@@ -84,6 +85,7 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
       throw new ApiError(500, "Error while liking tweet");
     }
   }
+
   return res
     .status(200)
     .json(new ApiResponse(200, {}, "Liked tweet status updated"));
@@ -91,6 +93,8 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 
 const getLikedVideos = asyncHandler(async (req, res) => {
   // TODO: get all liked videos
+  const { page = 1, limit = 10 } = req.query;
+
   const likedVideos = await Like.aggregate([
     {
       $match: {
@@ -104,6 +108,9 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         foreignField: "_id",
         as: "video",
         pipeline: [
+          {
+            $match: { isPublished: true },
+          },
           {
             $lookup: {
               from: "users",
@@ -148,10 +155,18 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         createdAt: -1,
       },
     },
+    {
+      $skip: (page - 1) * limit,
+    },
+    {
+      $limit: parseInt(limit),
+    },
   ]);
+
   if (!likedVideos) {
-    throw new ApiError(500, "No liked videos found for this user");
+    throw new ApiError(500, "Error while fetching liked videos");
   }
+
   return res
     .status(200)
     .json(
