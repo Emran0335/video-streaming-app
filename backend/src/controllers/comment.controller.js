@@ -181,7 +181,10 @@ const deleteComment = asyncHandler(async (req, res) => {
   }
 
   if (comment.owner.toString() !== req.user?._id.toString()) {
-    throw new ApiError(401, "You do not permission to delete this comment");
+    throw new ApiError(
+      401,
+      "You do not have the permission to delete this comment"
+    );
   }
 
   const deletedComment = await Comment.findByIdAndDelete(commentId);

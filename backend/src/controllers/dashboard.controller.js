@@ -3,12 +3,22 @@ import { Video } from "../models/video.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import mongoose from "mongoose";
+import { Tweet } from "../models/tweet.model.js";
 
 const getChannelStats = asyncHandler(async (req, res) => {
   // TODO: Get the channel stats like total video views, total subscribers, total videos, total likes, etc
+  const { userId } = req.params;
+
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new ApiError(400, "Invalid");
+  }
+
   const videoStats = await Video.aggregate([
     {
-      $match: { owner: req.user?._id },
+      $match: {
+        owner: new mongoose.Types.ObjectId(userId),
+      },
     },
     {
       $lookup: {
@@ -45,7 +55,7 @@ const getChannelStats = asyncHandler(async (req, res) => {
   const subscriberStats = await Subscription.aggregate([
     {
       $match: {
-        channel: req.user?._id,
+        channel: new mongoose.Types.ObjectId(userId),
       },
     },
     {
@@ -57,7 +67,23 @@ const getChannelStats = asyncHandler(async (req, res) => {
       },
     },
   ]);
-  if (!(videoStats && subscriberStats)) {
+  const tweetStats = await Tweet.aggregate([
+    {
+      $match: {
+        owner: new mongoose.Types.ObjectId(userId),
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        tweetCnt: {
+          $sum: 1,
+        },
+      },
+    },
+  ]);
+
+  if (!(videoStats && subscriberStats && tweetStats)) {
     throw new ApiError(500, "Failed to fetch channelStats details");
   }
   const stats = {
@@ -65,6 +91,7 @@ const getChannelStats = asyncHandler(async (req, res) => {
     totalLikes: videoStats[0]?.totalLikesCnt || 0,
     totalVideos: videoStats[0]?.totalVideos || 0,
     totalViews: videoStats[0]?.totalViewsCnt || 0,
+    totalTweets: tweetStats[0]?.tweetCnt || 0,
   };
   return res
     .status(200)
@@ -95,31 +122,41 @@ const getChannelVideos = asyncHandler(async (req, res) => {
       },
     },
     {
+      $lookup: {
+        from: "comments",
+        localField: "_id",
+        foreignField: "video",
+        as: "comments",
+      },
+    },
+    {
+      $addFields: {
+        commentsCount: {
+          $size: "$comments",
+        },
+      },
+    },
+    {
       $project: {
         _id: 1,
         videoFile: 1,
+        isPublished: 1,
         thumbnail: 1,
         likesCount: 1,
+        commentsCount: 1,
         createdAt: 1,
-        title: 1,
         description: 1,
-        duration: 1,
+        title: 1,
         views: 1,
       },
     },
   ]);
-  if (!videos || videos.length === 0) {
+  if (!videos) {
     throw new ApiError(404, "No videos found");
   }
   return res
     .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        videos,
-        "Videos fetched successfully from getChannels api"
-      )
-    );
+    .json(new ApiResponse(200, videos, "Videos fetched successfully"));
 });
 
 export { getChannelStats, getChannelVideos };
