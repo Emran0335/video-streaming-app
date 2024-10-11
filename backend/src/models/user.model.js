@@ -39,6 +39,10 @@ const userSchema = new Schema(
     coverImage: {
       type: String, // cludinary url
     },
+    description: {
+      type: String,
+      default: "",
+    },
     watchHistory: [
       {
         type: Schema.Types.ObjectId,
@@ -55,6 +59,7 @@ userSchema.pre("save", async function (next) {
   // if we do not modify or create new password, we should return next method. Otherwise, it will create new password each time as it is pre method of userSchema.
 
   if (!this.isModified("password")) return next();
+
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
@@ -73,7 +78,9 @@ userSchema.methods.generateAccessToken = function () {
       username: this.username,
       fullName: this.fullName,
     },
+
     process.env.ACCESS_TOKEN_SECRET,
+
     {
       expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
     }
@@ -85,7 +92,9 @@ userSchema.methods.generateRefreshToken = function () {
     {
       _id: this._id,
     },
+
     process.env.REFRESH_TOKEN_SECRET,
+    
     {
       expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
     }
