@@ -7,12 +7,13 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
   // if res is not used, we can use _ instead of res
   try {
     const token =
-      req.cookies?.accessToken ||
+      // req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
-    console.log(token);
+
     if (!token) {
       throw new ApiError(401, "Unauthrized request!");
     }
+
     jwt.verify(
       token,
       process.env.ACCESS_TOKEN_SECRET,
@@ -23,6 +24,7 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
           }
           return next(new ApiError(401, "Invalid access token"));
         }
+
         const user = await User.findById(decodedToken?._id).select(
           "-password -refreshToken"
         );
@@ -30,6 +32,7 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
         if (!user) {
           throw new ApiError(401, "Invalid AccessToken");
         }
+
         // new object should be added to the req object.
         req.user = user;
         next();
