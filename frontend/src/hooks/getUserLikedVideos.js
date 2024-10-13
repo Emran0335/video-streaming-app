@@ -1,11 +1,11 @@
-import axios from "axios";
+import axiosInstance from "../utils/axios.helper.js";
 import { addUserLikedVideos } from "../store/userSlice";
 
-export const getUserLikedVideos = async (dispatch) => {
+export const getUserLikedVideos = async (dispatch, page = 1, limit = 10) => {
   try {
-    const response = await axios.get("/api/v1/likes/videos", {
-      withCredentials: true,
-    });
+    const response = await axiosInstance.get(
+      `/likes/videos?page=${page}&limit=${limit}`
+    );
     if (response?.data?.data) {
       dispatch(addUserLikedVideos(response.data.data));
       return response.data;

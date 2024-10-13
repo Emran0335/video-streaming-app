@@ -1,15 +1,14 @@
-import axios from "axios";
+import axiosInstance from "../utils/axios.helper.js";
 import { setUser } from "../store/authSlice";
+
 export const getCurrentUser = async (dispatch) => {
   try {
-    const response = await axios.get("/api/v1/users/current-user", {
-      withCredentials: true,
-    });
+    const response = await axiosInstance.get("/users/current-user");
     if (response?.data?.data) {
       dispatch(setUser(response.data.data));
       return response.data;
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };

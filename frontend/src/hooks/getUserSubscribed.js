@@ -1,13 +1,13 @@
 import axiosInstance from "../utils/axios.helper.js";
-import { addUserHistory } from "../store/userSlice";
+import { addUserSubscribed } from "../store/userSlice.js";
 
-export const getUserHistory = async (dispatch, page = 1, limit = 10) => {
+export const getUserSubscribed = async (dispatch, subscriberId) => {
   try {
     const response = await axiosInstance.get(
-      `/users/history?page=${page}&limit=${limit}`
+      `/subscriptions/u/${subscriberId}`
     );
     if (response?.data?.data) {
-      dispatch(addUserHistory(response.data.data));
+      dispatch(addUserSubscribed(response.data.data));
       return response.data;
     }
   } catch (error) {
