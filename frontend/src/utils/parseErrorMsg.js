@@ -7,7 +7,7 @@ export const parseErrorMessage = (responseHTMLString) => {
   const errorMessageElement = responseDocument.querySelector("pre");
 
   if (errorMessageElement) {
-    // Extract the error message usning regex
+    // Extract the error message using regex
     const errorMessage = errorMessageElement.textContent.match(
       /^Error:\s*(.*?)(?=\s*at)/
     );

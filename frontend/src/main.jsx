@@ -6,16 +6,23 @@ import { Provider } from "react-redux";
 import store from "./store/store.js";
 import Home from "./pages/Home.jsx";
 import Search from "./pages/Search.jsx";
+import Tweets from "./pages/Tweets.jsx";
 import Video from "./pages/Video.jsx";
 import Login from "./pages/Login.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import LikedVideos from "./pages/LikedVideos.jsx";
 import History from "./pages/History.jsx";
 import Channel from "./pages/Channel.jsx";
 import Settings from "./pages/Settings.jsx";
 import Support from "./pages/Support.jsx";
+import Subscriptions from "./pages/Subscriptions.jsx";
 import ChannelVideos from "./components/Channel/ChannelVideos.jsx";
-import ChannelTweets from "./pages/ChannelTweets.jsx";
+import ChannelTweets from "./components/Channel/ChannelTweets.jsx";
+import ChannelPlaylist from "./components/Channel/ChannelPlaylist.jsx";
+import ChannelSubscribed from "./components/Channel/ChannelSubscribed.jsx";
+import AboutChannel from "./components/Channel/AboutChannel.jsx";
+import PlaylistVideos from "./components/Playlist/PlaylistVideos.jsx";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +66,10 @@ const router = createBrowserRouter([
         element: <Support />,
       },
       {
+        path: "/tweets",
+        element: <Tweets />,
+      },
+      {
         path: "/channel/:username",
         element: <Channel />,
         children: [
@@ -68,18 +79,33 @@ const router = createBrowserRouter([
           },
           {
             path: "/channel/:username/tweets",
-            element: <ChannelTweets />
+            element: <ChannelTweets />,
           },
           {
             path: "/channel/:username/playlist",
+            element: <ChannelPlaylist />,
           },
           {
-            path: "/channel/:username/subscribers",
+            path: "/channel/:username/subscribed",
+            element: <ChannelSubscribed />
           },
           {
             path: "/channel/:username/about",
+            element: <AboutChannel />
           },
         ],
+      },
+      {
+        path: "/playlist/:playlistId",
+        element: <PlaylistVideos />
+      },
+      {
+        path: "/subscriptions",
+        element: <Subscriptions />
+      },
+      {
+        path: "/admin/dashboard",
+        element: <Dashboard />
       },
     ],
   },

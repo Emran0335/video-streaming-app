@@ -1,11 +1,13 @@
 import axios from "axios";
+import { toast } from "react-toastify";
+import { parseErrorMessage } from "./parseErrorMsg";
 
 const axiosInstance = axios.create({
   baseURL: "/api/v1",
   withCredentials: true,
 });
 
-
+// Request interceptor to add the accessToken to headers
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
@@ -19,5 +21,39 @@ axiosInstance.interceptors.request.use(
   }
 );
 
+// Response interceptor to handle token expiration
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const errorMsg = parseErrorMessage(error.response.data);
+    const originalRequest = error.config;
+    if (
+      error.response.status === 401 &&
+      errorMsg === "TokenExpiredError" &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+      try {
+        const { data } = await axios.post(
+          "/api/v1/users/refresh-token",
+          {},
+          { withCredentials: true }
+        );
+        localStorage.setItem("accessToken", data.data.accessToken);
+        axiosInstance.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${data.accessToken}`;
+        return axiosInstance(originalRequest);
+      } catch (error) {
+        console.error("Failed to refresh token", error);
+        localStorage.removeItem("accessToken");
+        window.location.reload();
+        toast.error("Session expired. Please login again!");
+      }
+    }
+  }
+);
 
 export default axiosInstance;

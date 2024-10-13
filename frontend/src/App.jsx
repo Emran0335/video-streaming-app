@@ -27,13 +27,13 @@ function App() {
   if (loading) {
     return (
       <div className="h-screen w-full overflow-y-auto bg-[#121212] text-white">
-        <div className="flex flex-col items-center justify-center w-full h-full">
+        <div className="flex flex-col items-center justify-center mt-64">
           <span>{icons.loading}</span>
           <h1 className="text-3xl text-center mt-8 font-semibold">
-            Please wait ....{" "}
+            Please wait ...
           </h1>
           <h1 className="text-xl text-center mt-4">
-            Refresh the page if it takes too long time!
+            Refresh the page if it takes too long!
           </h1>
         </div>
       </div>
@@ -43,10 +43,10 @@ function App() {
     <div className="h-screen w-screen bg-black text-white flex flex-col bg-opacity-95">
       <Navbar />
       <div className="w-full h-full flex overflow-auto">
-        <div className="w-72 hidden lg:block">
+        <div>
           <Sidebar />
         </div>
-        <main className="overflow-y-auto h-full w-full">
+        <main className="overflow-y-auto h-full w-full" id="scrollableDiv">
           <Outlet />
         </main>
       </div>
