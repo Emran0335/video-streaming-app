@@ -1,15 +1,21 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authSlice from "./authSlice";
-import videosSlice from "./videosSlice";
+import tweetsSlice from "./tweetsSlice";
 import videoSlice from "./videoSlice";
 import userSlice from "./userSlice";
+import playlistSlice from "./playlistSlice";
+import playlistsSlice from "./playlistsSlice";
+import dashboardSlice from "./dashboardSlice";
 
 const store = configureStore({
   reducer: {
     auth: authSlice,
-    videos: videosSlice,
     user: userSlice,
-    video: videoSlice
+    video: videoSlice,
+    tweets: tweetsSlice,
+    playlist: playlistSlice,
+    playlists: playlistsSlice,
+    dashboard: dashboardSlice,
   },
 });
 
