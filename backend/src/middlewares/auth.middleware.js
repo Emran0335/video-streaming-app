@@ -7,7 +7,7 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
   // if res is not used, we can use _ instead of res
   try {
     const token =
-      // req.cookies?.accessToken ||
+      req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
