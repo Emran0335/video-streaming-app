@@ -26,7 +26,7 @@ function App() {
 
   if (loading) {
     return (
-      <div className="h-screen w-full overflow-y-auto bg-[#121212] text-white">
+      <div className="h-screen w-full overflow-y-auto bg-gray-800 text-white">
         <div className="flex flex-col items-center justify-center mt-64">
           <span>{icons.loading}</span>
           <h1 className="text-3xl text-center mt-8 font-semibold">
@@ -46,7 +46,10 @@ function App() {
         <div>
           <Sidebar />
         </div>
-        <main className="overflow-y-auto h-full w-full" id="scrollableDiv">
+        <main
+          className="overflow-y-auto h-full w-full scrollbar-hide"
+          id="scrollableDiv"
+        >
           <Outlet />
         </main>
       </div>

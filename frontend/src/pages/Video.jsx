@@ -8,7 +8,6 @@ import VideoInfo from "../components/Video/VideoInfo.jsx";
 import VideoListCard from "../components/Video/VideoListCard.jsx";
 import Comments from "../components/Comments.jsx";
 import axiosInstance from "../utils/axios.helper.js";
-import { addVideos } from "../store/videosSlice.js";
 
 function Video() {
   const dispatch = useDispatch();

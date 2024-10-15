@@ -1,28 +1,34 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addVideos } from "../../store/videosSlice";
 import { FaVideo } from "react-icons/fa";
 import VideoCard from "./VideoCard";
 import axiosInstance from "../../utils/axios.helper";
 
 function VideoContainer() {
-  const dispatch = useDispatch();
-  const { videos } = useSelector((state) => state.videos);
+  const [videos, setVideos] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
 
-  const getVideoData = async () => {
+  const getVideoData = async (page) => {
     try {
-      const response = await axiosInstance.get("/videos");
+      const response = await axiosInstance.get(`/videos?page=${page}&limit=20`);
       if (response?.data?.data?.length > 0) {
-        dispatch(addVideos(response?.data?.data));
+        setVideos((prevVideos) => [...prevVideos, ...response.data.data]);
+        setLoading(false);
+        if (response.data.data.length !== 20) {
+          setHasMore(false);
+        }
+      } else {
+        setHasMore(false);
       }
     } catch (error) {
-      console.log(error);
+      console.log("Error while fetching videos", error);
     }
   };
 
   useEffect(() => {
-    getVideoData();
+    getVideoData(page);
   }, []);
 
   if (!videos || videos.length === 0) {

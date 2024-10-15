@@ -18,7 +18,7 @@ export const icons = {
       ></path>
     </svg>
   ),
-  BigLoading: (
+  bigLoading: (
     <svg
       width="60"
       viewBox="0 0 100 100"

@@ -5,7 +5,7 @@ import ChannelComponent from "../components/Channel/Channel";
 
 function Channel() {
   const { username } = useParams();
-  console.log(username);
+
   if (username === "undefined") {
     return <GuestChannel />;
   } else {
