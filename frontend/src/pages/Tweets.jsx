@@ -139,7 +139,7 @@ function Tweets() {
         >
           <ul className="py-4 px-4">
             {tweets.map((tweet) => (
-              <Tweet key={tweets._id} tweet={tweet} page={true} />
+              <Tweet key={tweet._id} tweet={tweet} page={true} />
             ))}
           </ul>
         </InfiniteScroll>
