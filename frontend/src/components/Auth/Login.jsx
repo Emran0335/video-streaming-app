@@ -8,7 +8,7 @@ import Logo from "../Logo";
 import Input from "../Input";
 import Button from "../Button";
 import { icons } from "../../assets/Icons.jsx";
-import axios from "axios";
+import axiosInstance from "../../utils/axios.helper.js";
 
 function Login() {
   const dispatch = useDispatch();
@@ -21,15 +21,15 @@ function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
   const login = async (data) => {
     setError("");
     setLoading(true);
     try {
-      const response = await axios.post("/api/v1/users/login", data, {
-        withCredentials: true,
-      });
+      const response = await axiosInstance.post("/users/login", data);
       if (response?.data?.data) {
         dispatch(setUser(response.data.data.user));
+        localStorage.setItem("accessToken", response.data.data.accessToken);
         toast.success(response.data.message + "😂");
         navigate("/");
       }
