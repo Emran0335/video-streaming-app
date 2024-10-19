@@ -126,6 +126,35 @@ function Tweets() {
           </div>
         </div>
       </form>
+      <div className="mt-6 border-b border-gray-400"></div>
+      {tweets?.length > 0 ? (
+        <InfiniteScroll
+          dataLength={tweets.length}
+          next={fetchMoreData}
+          hasMore={hasMore}
+          loader={
+            <div className="flex justify-center h-7 mt-1">{icons.loading}</div>
+          }
+          scrollableTarget="scrollableDiv"
+        >
+          <ul className="py-4 px-4">
+            {tweets.map((tweet) => (
+              <Tweet key={tweets._id} tweet={tweet} page={true} />
+            ))}
+          </ul>
+        </InfiniteScroll>
+      ) : (
+        <GuestComponent
+          icon={
+            <span className="w-full h-full flex items-center p-4 pb-5">
+              <TiMessages className="w-32 h-32" />
+            </span>
+          }
+          title="Empty Tweets"
+          subTitle="There is no tweets right now. Be the first one to write a tweet"
+          guest={false}
+        />
+      )}
     </>
   );
 }
