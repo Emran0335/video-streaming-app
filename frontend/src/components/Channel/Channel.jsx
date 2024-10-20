@@ -76,7 +76,7 @@ function Channel() {
 
   return profile ? (
     <section className="relative w-full pb-[70px] sm:ml-[70px] sm:pb-0 lg:ml-0">
-      <div className="relative min-h-[150px] w-full pt-[20%]">
+      <div className="relative min-h-[150px] w-full pt-[20%] xl:ml-4">
         <div className="absolute inset-0 overflow-hidden">
           <img
             src={profile?.coverImage || logo}
@@ -86,7 +86,7 @@ function Channel() {
         </div>
       </div>
 
-      <div className="px-0 pb-4 mt-2">
+      <div className="px-0 pb-4 mt-2 xl:ml-4 mr-2">
         <div className="flex flex-wrap gap-4 pb-4 pt-6">
           <span className="relative -mt-12 inline-block h-32 w-32 shrink-0 overflow-hidden rounded-full border-2">
             <img
@@ -108,7 +108,7 @@ function Channel() {
               userData?.username === profile?.username ? (
                 <Button
                   onClick={() => navigate("/settings")}
-                  className="mr-1 flex items-center font-semibold transition-all duration-150 ease-in-out active:translate-x-[5px] active:translate-y-[5px] rounded-md hover:bg-pink-600"
+                  className="mr-4 flex items-center font-semibold transition-all duration-150 ease-in-out active:translate-x-[5px] active:translate-y-[5px] rounded-md hover:bg-pink-600"
                   bgColor="bg-pink-700"
                 >
                   <MdOutlineEdit />
@@ -162,7 +162,7 @@ function Channel() {
             )}
           </div>
         </div>
-        <ul className="no-scrollbar sticky top-0 bg-zinc-950 z-[2] flex flex-row gap-x-2 overflow-auto border-b-2 border-gray-400 py-2">
+        <ul className="no-scrollbar sticky top-0 left-4 bg-zinc-950 z-[2] flex flex-row gap-x-2 overflow-auto border-b-2 border-gray-400 py-2">
           <li className="w-full">
             <NavLink
               to=""
