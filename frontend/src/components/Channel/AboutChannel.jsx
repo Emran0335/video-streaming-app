@@ -2,7 +2,7 @@ import React from 'react'
 
 function AboutChannel() {
   return (
-    <div>AboutChannel</div>
+    <div>About Channel</div>
   )
 }
 

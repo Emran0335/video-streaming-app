@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import GuestChannel from "../components/GuestPages/GuestChannel";
 import ChannelComponent from "../components/Channel/Channel";
+import GuestChannel from "../components/GuestPages/GuestChannel";
 
 function Channel() {
   const { username } = useParams();
