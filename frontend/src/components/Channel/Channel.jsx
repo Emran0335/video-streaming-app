@@ -17,6 +17,7 @@ import axiosInstance from "../../utils/axios.helper";
 import LoginPopup from "../Auth/LoginPopup.jsx";
 import GuestComponent from "../GuestPages/GuestComponent.jsx";
 import logo from "../../assets/logo.png";
+import { toast } from "react-toastify";
 
 function Channel() {
   const dispatch = useDispatch();
@@ -49,7 +50,7 @@ function Channel() {
       }
     });
   }, [status, username]);
-
+  console.log("profile", profile);
   const toggleSubscribe = async () => {
     try {
       const response = await axiosInstance.post(
@@ -87,7 +88,7 @@ function Channel() {
       </div>
 
       <div className="px-0 pb-4 mt-2 xl:ml-4 mr-2">
-        <div className="flex flex-wrap gap-4 pb-4 pt-6">
+        <div className="flex flex-wrap gap-4 pb-4 mt-16">
           <span className="relative -mt-12 inline-block h-32 w-32 shrink-0 overflow-hidden rounded-full border-2">
             <img
               src={profile?.avatar}
@@ -103,7 +104,7 @@ function Channel() {
               {profile?.channelsSubscribedToCount} Subscribed
             </p>
           </div>
-          <div className="inline-block">
+          <div className="inline-block sm:mr-16">
             {status === true ? (
               userData?.username === profile?.username ? (
                 <Button
@@ -162,14 +163,14 @@ function Channel() {
             )}
           </div>
         </div>
-        <ul className="no-scrollbar sticky top-0 left-4 bg-zinc-950 z-[2] flex flex-row gap-x-2 overflow-auto border-b-2 border-gray-400 py-2">
+        <ul className="no-scrollbar sticky top-0 left-4 bg-zinc-950 z-[2] flex flex-row gap-x-2 overflow-auto border-b-2 border-gray-400 py-2 sm:mr-12">
           <li className="w-full">
             <NavLink
               to=""
               end
               className={({ isActive }) =>
                 isActive
-                  ? "w-full border border-gray-400 text-gray-200 bg-gray-600 px-2 py-1 rounded-md hover:text-gray-200 hover:bg-gray-500"
+                  ? "w-full text-gray-200 px-2 py-1 rounded-md"
                   : "w-full border-b-2 border-transparent text-gray-400 px-2 py-1"
               }
             >
@@ -181,7 +182,7 @@ function Channel() {
               to={"playlist"}
               className={({ isActive }) =>
                 isActive
-                  ? "w-full border border-gray-400 text-gray-200 bg-gray-600 px-2 py-1 rounded-md hover:text-gray-200 hover:bg-gray-500"
+                  ? "w-full text-gray-200 px-2 py-1 rounded-md"
                   : "w-full border-b-2 border-transparent text-gray-400 px-2 py-1"
               }
             >
@@ -193,7 +194,7 @@ function Channel() {
               to={"tweets"}
               className={({ isActive }) =>
                 isActive
-                  ? "w-full border border-gray-400 text-gray-200 bg-gray-600 px-2 py-1 rounded-md hover:text-gray-200 hover:bg-gray-500"
+                  ? "w-full text-gray-200 px-2 py-1 rounded-md"
                   : "w-full border-b-2 border-transparent text-gray-400 px-2 py-1"
               }
             >
@@ -205,7 +206,7 @@ function Channel() {
               to={"subscribed"}
               className={({ isActive }) =>
                 isActive
-                  ? "w-full border border-gray-400 text-gray-200 bg-gray-600 px-2 py-1 rounded-md hover:text-gray-200 hover:bg-gray-500"
+                  ? "w-full text-gray-200 px-2 py-1 rounded-md"
                   : "w-full border-b-2 border-transparent text-gray-400 px-2 py-1"
               }
             >
@@ -217,7 +218,7 @@ function Channel() {
               to={"about"}
               className={({ isActive }) =>
                 isActive
-                  ? "w-full border border-gray-400 text-gray-200 bg-gray-600 px-2 py-1 rounded-md hover:text-gray-200 hover:bg-gray-500"
+                  ? "w-full text-gray-200 px-2 py-1 rounded-md"
                   : "w-full border-b-2 border-transparent text-gray-400 px-2 py-1"
               }
             >

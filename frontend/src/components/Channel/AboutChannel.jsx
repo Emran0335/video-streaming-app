@@ -12,6 +12,7 @@ import { AiOutlineMessage } from "react-icons/ai";
 import { GoInfo } from "react-icons/go";
 
 function AboutChannel() {
+  
   return <div>About Channel</div>;
 }
 
