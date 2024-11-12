@@ -21,7 +21,7 @@ function ChannelPlaylist() {
     getUserPlaylist(dispatch, userId || userData._id).then(() =>
       setLoading(false)
     );
-  }, [username, dispatch, userData._id, userId]);
+  }, [username]);
 
   const playlists = useSelector((state) => state.user.userPlaylist);
 
