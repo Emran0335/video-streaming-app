@@ -34,7 +34,7 @@ function Dashboard() {
     );
   } else {
     return (
-      <div>
+      <div className="m-4">
         <ChannelStats stats={stats} />
         <VideoPanel channelVideos={videos} />
       </div>

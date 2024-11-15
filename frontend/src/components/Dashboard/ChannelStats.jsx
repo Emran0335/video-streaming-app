@@ -24,7 +24,7 @@ const ChannelStats = ({ stats }) => {
           <VideoCard ref={uploadRef} />
           <button
             onClick={() => uploadRef.current?.open}
-            className="mt-4 inline-flex items-center gap-x-2 bg-pink-600/90 border border-transparent rounded hover:border-white"
+            className="mt-4 inline-flex items-center gap-x-2 bg-pink-600/90 border border-transparent rounded hover:border-white px-1"
           >
             <IoAdd className="w-5 h-5" />
             Upload Video
