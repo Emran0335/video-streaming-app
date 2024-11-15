@@ -22,9 +22,8 @@ function Dashboard() {
     }
   }, []);
 
-  console.log("userData", userData);
   const { videos, stats } = useSelector((state) => state.dashboard);
-
+  console.log("stats", stats)
   if (!status) {
     return <GuestDashboard />;
   }
