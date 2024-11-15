@@ -1,11 +1,11 @@
 import React, { useRef } from "react";
+import { FaRegHeart, FaRegUser } from "react-icons/fa";
+import { GoDeviceCameraVideo } from "react-icons/go";
+import { IoAdd } from "react-icons/io5";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { useSelector } from "react-redux";
 import InfoBox from "./InfoBox.jsx";
-import { GoDeviceCameraVideo } from "react-icons/go";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { FaRegUser, FaRegHeart } from "react-icons/fa";
 import VideoCard from "./VideoCard.jsx";
-import { IoAdd } from "react-icons/io5";
 
 const ChannelStats = ({ stats }) => {
   const user = useSelector((state) => state.auth.userData);
@@ -36,7 +36,7 @@ const ChannelStats = ({ stats }) => {
           key="total-videos"
           title="Total Videos"
           value={stats.totalVideos}
-          icon={<MdOutlineRemoveRedEye className="h-6 w-6" />}
+          icon={<GoDeviceCameraVideo className="h-6 w-6" />}
         />
         <InfoBox
           key="total-views"
@@ -48,13 +48,13 @@ const ChannelStats = ({ stats }) => {
           key="total-subscribers"
           title="Total Subscribers"
           value={stats.subscriberCount}
-          icon={<MdOutlineRemoveRedEye className="h-6 w-6" />}
+          icon={<FaRegUser className="h-6 w-6" />}
         />
         <InfoBox
           key="total-likes"
           title="Total Likes"
           value={stats.totalLikes}
-          icon={<MdOutlineRemoveRedEye className="h-6 w-6" />}
+          icon={<FaRegHeart className="h-6 w-6" />}
         />
       </div>
     </>

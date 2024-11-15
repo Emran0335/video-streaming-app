@@ -1,6 +1,6 @@
 import React from 'react'
 
-const InfoBox = () => {
+const InfoBox = ({title, value, icon}) => {
   return (
     <div>InfoBox</div>
   )
