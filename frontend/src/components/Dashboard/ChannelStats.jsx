@@ -5,7 +5,7 @@ import { IoAdd } from "react-icons/io5";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { useSelector } from "react-redux";
 import InfoBox from "./InfoBox.jsx";
-import VideoCard from "./VideoCard.jsx";
+import VideoForm from "./VideoForm.jsx";
 
 const ChannelStats = ({ stats }) => {
   const user = useSelector((state) => state.auth.userData);
@@ -21,7 +21,7 @@ const ChannelStats = ({ stats }) => {
           </p>
         </div>
         <div className="block">
-          <VideoCard ref={uploadRef} />
+          <VideoForm ref={uploadRef} />
           <button
             onClick={() => uploadRef.current?.open}
             className="mt-4 inline-flex items-center gap-x-2 bg-pink-600/90 border border-transparent rounded hover:border-white px-1"
