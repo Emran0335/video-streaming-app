@@ -10,7 +10,7 @@ import VideoForm from "./VideoForm.jsx";
 const ChannelStats = ({ stats }) => {
   const user = useSelector((state) => state.auth.userData);
   const uploadRef = useRef();
-  console.log(user);
+  
   return (
     <>
       <div className="flex flex-wrap justify-between gap-4">
@@ -23,7 +23,7 @@ const ChannelStats = ({ stats }) => {
         <div className="block">
           <VideoForm ref={uploadRef} />
           <button
-            onClick={() => uploadRef.current?.open}
+            onClick={() => uploadRef.current?.open()}
             className="mt-4 inline-flex items-center gap-x-2 bg-pink-600/90 border border-transparent rounded hover:border-white px-1"
           >
             <IoAdd className="w-5 h-5" />

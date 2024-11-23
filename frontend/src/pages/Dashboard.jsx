@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getChannelVideos } from "../hooks/getChannelVideos.js";
-import { getChannelStats } from "../hooks/getChannelStats.js";
-import GuestDashboard from "../components/GuestPages/GuestDashboard.jsx";
 import { icons } from "../assets/Icons.jsx";
 import ChannelStats from "../components/Dashboard/ChannelStats.jsx";
 import VideoPanel from "../components/Dashboard/VideoPanel.jsx";
+import GuestDashboard from "../components/GuestPages/GuestDashboard.jsx";
+import { getChannelStats } from "../hooks/getChannelStats.js";
+import { getChannelVideos } from "../hooks/getChannelVideos.js";
 
 function Dashboard() {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ function Dashboard() {
   }, []);
 
   const { videos, stats } = useSelector((state) => state.dashboard);
-  console.log("stats", stats)
+  
   if (!status) {
     return <GuestDashboard />;
   }
