@@ -1,17 +1,17 @@
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import formatDate from "../../utils/formatDate";
 import { Link } from "react-router-dom";
-import formatDate from "../../utils/formatDate.js";
-import ConfirmPopup from "../ConfirmPopup.jsx";
-import axiosInstance from "../../utils/axios.helper.js";
+import ConfirmPopup from "../ConfirmPopup";
+import axiosInstance from "../../utils/axios.helper";
 import { toast } from "react-toastify";
-import { updateVideoPublishStatus } from "../../store/dashboardSlice.js";
-import { deleteVideo } from "../../store/dashboardSlice.js";
+import { updateVideoPublishStatus } from "../../store/dashboardSlice";
+import { deleteVideo } from "../../store/dashboardSlice";
 import { MdDelete, MdEdit } from "react-icons/md";
-import VideoForm from "./VideoForm.jsx";
+import VideoForm from "./VideoForm";
 import { getChannelStats } from "../../hooks/getChannelStats.js";
 
-const VideoCard = ({ video }) => {
+function VideoCard({ video }) {
   const dispatch = useDispatch();
   const confirmDialog = useRef();
   const editDialog = useRef();
@@ -27,7 +27,7 @@ const VideoCard = ({ video }) => {
       if (response.data.success) {
         dispatch(
           updateVideoPublishStatus({
-            videoId: video?._id,
+            videoId: video._id,
             isPublished: !video.isPublished,
           })
         );
@@ -36,7 +36,7 @@ const VideoCard = ({ video }) => {
       }
     } catch (error) {
       toast.error("Error while toggling publish status");
-      console.error(error);
+      console.log(error);
     }
   };
 
@@ -55,6 +55,7 @@ const VideoCard = ({ video }) => {
       }
     }
   };
+
   return (
     <tr key={video._id} className="group border">
       <td className="border-collapse border-b border-gray-600 px-4 py-3 group-last:border-none">
@@ -70,7 +71,7 @@ const VideoCard = ({ video }) => {
               defaultChecked={video.isPublished}
               className="peer sr-only"
             />
-            <span className="inline-block h-6 w-full rounded-2xl bg-gray-200 duration-200 after:bottom-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-black after:duration-200 peer-checked:bg-pink-600 peer-checked:after:left-7"></span>
+            <span className="inline-block h-6 w-full rounded-2xl bg-gray-200 duration-200 after:absolute after:bottom-1 after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-black after:duration-200 peer-checked:bg-pink-600 peer-checked:after:left-7"></span>
           </label>
         </div>
       </td>
@@ -88,23 +89,23 @@ const VideoCard = ({ video }) => {
         </div>
       </td>
       <td className="border-collapse border-b border-gray-600 px-4 py-3 group-last:border-none">
-        <div className="flex justify-center items-center gap-4">
+        <div className="flex justify-start items-center gap-4">
           {publishStatus ? (
             <Link to={`/watchpage/${video._id}`}>
               <img
+                className="h-10 w-10 rounded-full object-cover"
                 src={video.thumbnail}
                 alt={video.title}
-                className="h-10 w-10 rounded-full object-cover"
               />
             </Link>
           ) : (
             <img
+              className="h-10 w-10 rounded-full object-cover"
               src={video.thumbnail}
               alt={video.title}
-              className="h-10 w-10 rounded-full object-cover"
             />
           )}
-          <h3>
+          <h3 className="font-semibold">
             {publishStatus ? (
               <Link
                 to={`/watchpage/${video._id}`}
@@ -122,27 +123,27 @@ const VideoCard = ({ video }) => {
           </h3>
         </div>
       </td>
-      <td className="border-collapse border-b border-gray-600 px-4 py-3 group-last:border-none">
+      <td className="border-collapse text-center border-b border-gray-600 px-4 py-3 group-last:border-none">
         {formatDate(video.createdAt)}
       </td>
-      <td className="border-collapse border-b border-gray-600 px-4 py-3 group-last:border-none">
+      <td className="border-collapse text-center border-b border-gray-600 px-4 py-3 group-last:border-none">
         {video.views}
       </td>
-      <td className="border-collapse border-b border-gray-600 px-4 py-3 group-last:border-none">
+      <td className="border-collapse text-center border-b border-gray-600 px-4 py-3 group-last:border-none">
         {video.commentsCount}
       </td>
-      <td className="border-collapse border-b border-gray-600 px-4 py-3 group-last:border-none">
+      <td className="border-collapse text-center border-b border-gray-600 px-4 py-3 group-last:border-none">
         {video.likesCount}
       </td>
       <td className="border-collapse border-b border-gray-600 px-4 py-3 group-last:border-none">
         <ConfirmPopup
           ref={confirmDialog}
           title="Delete Video"
-          subTitle={`${video.title} - Total views: ${video.views}`}
+          subtitle={`${video.title} - Total views: ${video.views}`}
           confirm="Delete"
           cancel="Cancel"
           critical
-          message="Are you sure want to delete this video? Once deleted, you will not be able to recover it."
+          message="Are you sure you want to delete this video? Once deleted, you will not be able to recover it."
           actionFunction={handleDeleteVideo}
         />
         <VideoForm ref={editDialog} video={video} />
@@ -160,6 +161,6 @@ const VideoCard = ({ video }) => {
       </td>
     </tr>
   );
-};
+}
 
 export default VideoCard;

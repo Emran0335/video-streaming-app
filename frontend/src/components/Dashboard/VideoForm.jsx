@@ -1,15 +1,15 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { useForm } from "react-hook-form";
-import { BsUpload } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
-import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
-import { getChannelVideos } from "../../hooks/getChannelVideos.js";
-import { addVideoStats } from "../../store/dashboardSlice.js";
+import { BsUpload } from "react-icons/bs";
 import axiosInstance from "../../utils/axios.helper.js";
+import { toast } from "react-toastify";
+import { createPortal } from "react-dom";
 import UploadSuccess from "./UploadSuccess.jsx";
 import UploadingVideo from "./UploadingVideo.jsx";
+import { addVideoStats } from "../../store/dashboardSlice.js";
+import { useDispatch } from "react-redux";
+import { getChannelVideos } from "../../hooks/getChannelVideos.js";
 
 function VideoForm({ video = false }, ref) {
   const dialog = useRef();
@@ -31,6 +31,7 @@ function VideoForm({ video = false }, ref) {
       description: video?.description || "",
     },
   });
+
   useImperativeHandle(
     ref,
     () => {
@@ -46,6 +47,7 @@ function VideoForm({ video = false }, ref) {
     },
     []
   );
+
   useEffect(() => {
     if (showPopup) {
       dialog.current.showModal();
@@ -67,14 +69,15 @@ function VideoForm({ video = false }, ref) {
         reset();
         dispatch(addVideoStats());
         getChannelVideos(dispatch);
-        toast.success("Video upload successfully");
+        toast.success("Video uploaded successfully");
       });
     } catch (error) {
       uploadingDialog.current.close();
-      toast.error("Error while uploading video. Try again!");
+      toast.error("Error while uploading video. Try again!!");
       console.log("Error uploading video", error);
     }
   };
+
   const updateVideo = async (data) => {
     const formData = new FormData();
     for (const key in data) {
@@ -91,10 +94,11 @@ function VideoForm({ video = false }, ref) {
       });
     } catch (error) {
       uploadingDialog.current.close();
-      toast.error("Error while updating video. Try again!");
+      toast.error("Error while updating video. Try again!!");
       console.log("Error updating video", error);
     }
   };
+
   const handleVideo = async (data) => {
     if (video) {
       updateVideo(data);
@@ -111,7 +115,7 @@ function VideoForm({ video = false }, ref) {
         createPortal(
           <dialog
             ref={dialog}
-            className="h-fit backdrop:backdrop-blur-lg lg:w-[40%] md:w-2/3 flex items-center"
+            className="h-fit backdrop:backdrop-blur-lg lg:w-[40%] md:w-2/3 items-center"
           >
             <UploadingVideo
               ref={uploadingDialog}
@@ -142,19 +146,20 @@ function VideoForm({ video = false }, ref) {
                     <IoClose className="w-6 h-6" />
                   </button>
                 </div>
+
                 <div className="mx-auto flex w-full max-w-3xl flex-col gap-y-2 md:gap-y-3 p-4">
                   {!video && (
                     <>
                       <div className="w-full border-2 border-dotted px-2 py-5 text-center">
-                        <span className="mb-2 inline-block rounded-full bg-slate-500 p-3 text-gray-50">
-                          <BsUpload className="w-7 h-7" />
+                        <span className="mb-2 inline-block rounded-full bg-[#f8c3fa] p-3 text-pink-500">
+                          <BsUpload className="h-7 w-7" />
                         </span>
                         <h6 className="mb-1 font-semibold text-sm md:text-lg">
                           Select video file to upload
                         </h6>
                         <p className="text-gray-400 text-sm">
-                          Your video will be published by default after upload
-                          is complete.
+                          Your video will be publised by default after upload is
+                          complete.
                         </p>
                         <label
                           htmlFor="upload-video"
@@ -171,7 +176,7 @@ function VideoForm({ video = false }, ref) {
                                 const fileType = file[0].type;
                                 return allowedExtensions.includes(fileType)
                                   ? true
-                                  : "Invalid file type? Only .mp4 files are accepted";
+                                  : "Invalid file type! Only .mp4 files are accepted";
                               },
                             })}
                           />
@@ -190,6 +195,7 @@ function VideoForm({ video = false }, ref) {
                       )}
                     </>
                   )}
+
                   <div className="w-full">
                     <label htmlFor="thumbnail" className="mb-1 inline-block">
                       Thumbnail
@@ -212,7 +218,7 @@ function VideoForm({ video = false }, ref) {
                           const fileType = file[0]?.type;
                           return allowedExtensions.includes(fileType)
                             ? true
-                            : "Ivalid file type! Only .jpeg .png and .jpg files are accepted";
+                            : "Invalid file type! Only .png .jpg and .jpeg files are accepted";
                         },
                       })}
                     />
@@ -225,6 +231,7 @@ function VideoForm({ video = false }, ref) {
                       {errors.thumbnail.message}
                     </div>
                   )}
+
                   <div className="w-full">
                     <label htmlFor="title" className="mb-1 inline-block">
                       Title
@@ -243,17 +250,19 @@ function VideoForm({ video = false }, ref) {
                   {errors.title?.type === "required" && (
                     <div className="text-red-500">Title is required</div>
                   )}
+
                   <div className="w-full">
                     <label htmlFor="desc" className="mb-1 inline-block">
                       Description
                     </label>
                     <textarea
-                      id="desc"
                       placeholder="Add some description"
+                      id="desc"
                       className="h-24 md:h-32 w-full resize-none border focus:border-pink-400 bg-transparent px-2 py-1 outline-none"
                       {...register("description")}
                     />
                   </div>
+
                   <div className="grid grid-cols-2 gap-4">
                     <button
                       type="button"
@@ -272,7 +281,7 @@ function VideoForm({ video = false }, ref) {
                         errors.videoFile ||
                         (!video && errors.thumbnail)
                       }
-                      className="bg-pink-600 px-4 py-2 text-black hover:border disabled:bg-pink-700 disabled:cursor-not-allowed"
+                      className="bg-pink-600 px-4 py-2 text-black hover:font-semibold hover:border disabled:bg-pink-700 disabled:cursor-not-allowed"
                     >
                       {video ? "Update" : "Publish"}
                     </button>
