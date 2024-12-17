@@ -30,7 +30,7 @@ function UploadSuccess({ video, updating = false }, ref) {
             <div className="w-full max-w-lg overflow-auto rounded-lg border border-gray-700 bg-zinc-950 p-4">
               <div className="mb-4 flex items-start justify-between">
                 <h2 className="text-xl font-semibold">
-                  Video {updating ? "Updated" : "Uploaded"} Successfully ...
+                  Video {updating ? "Updated" : "Uploaded"} Successfully...
                 </h2>
                 <button
                   autoFocus
@@ -43,7 +43,7 @@ function UploadSuccess({ video, updating = false }, ref) {
               </div>
               <div className="mb-4 flex gap-x-2 border p-3">
                 <div className="shrink-0">
-                  <span>
+                  <span className="inline-block w-full rounded-full bg-[#f8c3fa] p-1 text-pink-400">
                     <TbMovie className="w-6 h-6" />
                   </span>
                 </div>
@@ -61,7 +61,7 @@ function UploadSuccess({ video, updating = false }, ref) {
                       MB
                     </p>
                   )}
-                  <div>
+                  <div className="mt-2 flex items-center gap-x-1">
                     <IoCloudDoneOutline className="w-5 h-5" />
                     Video {updating ? "Updated" : "Uploaded"}
                   </div>

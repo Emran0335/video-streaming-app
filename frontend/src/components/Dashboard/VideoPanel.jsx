@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import { GoSearch } from "react-icons/go";
-import VideoCard from "./VideoCard.jsx";
+import VideoCard from "./VideoCard";
 
-const VideoPanel = ({ channelVideos }) => {
+function VideoPanel({ channelVideos }) {
   const [filter, setFilter] = useState(null);
 
   function handleUserInput(input) {
     if (!input || input === "") setFilter(channelVideos);
     else {
       const filteredData = channelVideos?.filter((video) =>
-        video.title.toLowerCase().startWith(input.toLowerCase().trim())
+        video.title.toLowerCase().startsWith(input.toLowerCase().trim())
       );
       setFilter(filteredData);
     }
   }
+
   let videos = filter || channelVideos;
   return (
     <>
@@ -22,10 +23,9 @@ const VideoPanel = ({ channelVideos }) => {
           <GoSearch />
         </span>
         <input
-          type="text"
           onChange={(e) => handleUserInput(e.target.value.trim())}
-          placeholder="Search"
           className="w-full bg-transparent outline-none"
+          placeholder="Search"
         />
       </div>
 
@@ -36,7 +36,7 @@ const VideoPanel = ({ channelVideos }) => {
               <th className="border-collapse border-b p-4">Toggle</th>
               <th className="border-collapse border-b p-4">Status</th>
               <th className="border-collapse border-b p-4">Video</th>
-              <th className="border-collapse border-b p-4">Date Upload</th>
+              <th className="border-collapse border-b p-4">Date Uploaded</th>
               <th className="border-collapse border-b p-4">Views</th>
               <th className="border-collapse border-b p-4">Comments</th>
               <th className="border-collapse border-b p-4">Likes</th>
@@ -52,6 +52,6 @@ const VideoPanel = ({ channelVideos }) => {
       </div>
     </>
   );
-};
+}
 
 export default VideoPanel;

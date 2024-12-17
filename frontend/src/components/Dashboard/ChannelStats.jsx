@@ -1,16 +1,16 @@
 import React, { useRef } from "react";
-import { FaRegHeart, FaRegUser } from "react-icons/fa";
-import { GoDeviceCameraVideo } from "react-icons/go";
-import { IoAdd } from "react-icons/io5";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { useSelector } from "react-redux";
-import InfoBox from "./InfoBox.jsx";
-import VideoForm from "./VideoForm.jsx";
+import InfoBox from "./InfoBox";
+import { GoDeviceCameraVideo } from "react-icons/go";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { FaRegUser, FaRegHeart } from "react-icons/fa";
+import VideoForm from "./VideoForm";
+import { IoAdd } from "react-icons/io5";
 
-const ChannelStats = ({ stats }) => {
+function ChannelStats({ stats }) {
   const user = useSelector((state) => state.auth.userData);
   const uploadRef = useRef();
-  
+
   return (
     <>
       <div className="flex flex-wrap justify-between gap-4">
@@ -24,7 +24,7 @@ const ChannelStats = ({ stats }) => {
           <VideoForm ref={uploadRef} />
           <button
             onClick={() => uploadRef.current?.open()}
-            className="mt-4 inline-flex items-center gap-x-2 bg-pink-600/90 border border-transparent rounded hover:border-white px-1"
+            className="mt-4 inline-flex items-center gap-x-2 bg-pink-600 hover:bg-pink-600/90 border border-transparent rounded hover:border-white px-3 py-1.5 font-semibold text-white"
           >
             <IoAdd className="w-5 h-5" />
             Upload Video
@@ -59,6 +59,6 @@ const ChannelStats = ({ stats }) => {
       </div>
     </>
   );
-};
+}
 
 export default ChannelStats;
