@@ -1,8 +1,13 @@
-import React from 'react'
+import React from 'react';
+import GuestComponent from './GuestComponent.js';
+
 
 const GuestSubscriptions = () => {
   return (
-    <div>GuestSubscriptions</div>
+    <GuestComponent 
+    title='Watch videos you like'
+    subTitle="Login and get the videos of channel you subscribe at one place"
+    />
   )
 }
 

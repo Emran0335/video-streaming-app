@@ -1,23 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  NavLink,
-  Outlet,
-  useParams,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { icons } from "../../assets/Icons.jsx";
-import { getUserProfile } from "../../hooks/getUserProfile";
-import { MdOutlineEdit } from "react-icons/md";
-import { FiVideoOff } from "react-icons/fi";
-import Button from "../Button.jsx";
 import { FaBell, FaCheckCircle } from "react-icons/fa";
+import { FiVideoOff } from "react-icons/fi";
+import { MdOutlineEdit } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    NavLink,
+    Outlet,
+    useLocation,
+    useNavigate,
+    useParams,
+} from "react-router-dom";
+import { toast } from "react-toastify";
+import { icons } from "../../assets/Icons.jsx";
+import logo from "../../assets/logo.png";
+import { getUserProfile } from "../../hooks/getUserProfile";
 import axiosInstance from "../../utils/axios.helper";
 import LoginPopup from "../Auth/LoginPopup.jsx";
+import Button from "../Button.jsx";
 import GuestComponent from "../GuestPages/GuestComponent.jsx";
-import logo from "../../assets/logo.png";
-import { toast } from "react-toastify";
 
 function Channel() {
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ function Channel() {
         setError(
           <GuestComponent
             title="Channel does not exist"
-            subtitle="There is no channel for given username. Check the username again."
+            subTitle="There is no channel for given username. Check the username again."
             icon={
               <span className="w-full h-full flex items-center p-4">
                 <FiVideoOff className="w-28 h-28" />

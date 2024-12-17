@@ -1,15 +1,14 @@
 import React, { useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import formatDate from "../../utils/formatDate";
-import { Link } from "react-router-dom";
-import ConfirmPopup from "../ConfirmPopup";
-import axiosInstance from "../../utils/axios.helper";
-import { toast } from "react-toastify";
-import { updateVideoPublishStatus } from "../../store/dashboardSlice";
-import { deleteVideo } from "../../store/dashboardSlice";
 import { MdDelete, MdEdit } from "react-icons/md";
-import VideoForm from "./VideoForm";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import { getChannelStats } from "../../hooks/getChannelStats.js";
+import { deleteVideo, updateVideoPublishStatus } from "../../store/dashboardSlice";
+import axiosInstance from "../../utils/axios.helper";
+import formatDate from "../../utils/formatDate";
+import ConfirmPopup from "../ConfirmPopup";
+import VideoForm from "./VideoForm";
 
 function VideoCard({ video }) {
   const dispatch = useDispatch();
@@ -139,7 +138,7 @@ function VideoCard({ video }) {
         <ConfirmPopup
           ref={confirmDialog}
           title="Delete Video"
-          subtitle={`${video.title} - Total views: ${video.views}`}
+          subTitle={`${video.title} - Total views: ${video.views}`}
           confirm="Delete"
           cancel="Cancel"
           critical

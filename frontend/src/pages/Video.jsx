@@ -1,16 +1,15 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { IoPlayCircleOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { setVideo } from "../store/videoSlice";
-import VideoPlayer from "../components/Video/VideoPlayer.jsx";
+import { icons } from "../assets/Icons";
+import Comments from "../components/Comments.jsx";
+import GuestComponent from "../components/GuestPages/GuestComponent";
 import VideoInfo from "../components/Video/VideoInfo.jsx";
 import VideoListCard from "../components/Video/VideoListCard.jsx";
-import Comments from "../components/Comments.jsx";
+import VideoPlayer from "../components/Video/VideoPlayer.jsx";
+import { setVideo } from "../store/videoSlice";
 import axiosInstance from "../utils/axios.helper.js";
-import { icons } from "../assets/Icons";
-import { IoPlayCircleOutline } from "react-icons/io5";
-import GuestComponent from "../components/GuestPages/GuestComponent";
 
 function Video() {
   const dispatch = useDispatch();

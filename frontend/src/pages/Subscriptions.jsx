@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import axiosInstance from "../utils/axios.helper.js";
-import GuestSubscriptions from "../components/GuestPages/GuestSubscriptions.jsx";
-import GuestComponet from "../components/GuestPages/GuestComponent.jsx";
-import VideoCard from "../components/Video/VideoCard.jsx";
+import { useEffect, useState } from "react";
 import { FaRegPlayCircle } from "react-icons/fa";
-import { icons } from "../assets/Icons.jsx";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useSelector } from "react-redux";
+import { icons } from "../assets/Icons.jsx";
+import GuestComponet from "../components/GuestPages/GuestComponent.jsx";
+import GuestSubscriptions from "../components/GuestPages/GuestSubscriptions.jsx";
+import VideoCard from "../components/Video/VideoCard.jsx";
+import axiosInstance from "../utils/axios.helper.js";
 
 function Subscriptions() {
   const [videos, setVideos] = useState([]);

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserHistory } from "../hooks/getUserHistory.js";
-import GuestHistory from "../components/GuestPages/GuestHistory.jsx";
-import { icons } from "../assets/Icons.jsx";
 import { GoHistory } from "react-icons/go";
-import VideoListCard from "../components/Video/VideoListCard.jsx";
-import GuestComponent from "../components/GuestPages/GuestComponent.jsx";
-import { removeUserHistory } from "../store/userSlice.js";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useDispatch, useSelector } from "react-redux";
+import { icons } from "../assets/Icons.jsx";
+import GuestComponent from "../components/GuestPages/GuestComponent.jsx";
+import GuestHistory from "../components/GuestPages/GuestHistory.jsx";
+import VideoListCard from "../components/Video/VideoListCard.jsx";
+import { getUserHistory } from "../hooks/getUserHistory.js";
+import { removeUserHistory } from "../store/userSlice.js";
 
 function History() {
   const [loading, setLoading] = useState(true);
@@ -74,7 +74,7 @@ function History() {
             </span>
           }
           title="Empty Video History"
-          subtitle="You have no previously saved history"
+          subTitle="You have no previously saved history"
           guest={false}
         />
       )}

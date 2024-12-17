@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axiosInstance from "../utils/axios.helper.js";
 import { IoPlayOutline } from "react-icons/io5";
-import GuestComponent from "../components/GuestPages/GuestComponent.jsx";
-import { icons } from "../assets/Icons.jsx";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useParams } from "react-router-dom";
+import { icons } from "../assets/Icons.jsx";
+import GuestComponent from "../components/GuestPages/GuestComponent.jsx";
+import axiosInstance from "../utils/axios.helper.js";
 
 function Search() {
   const [videos, setVideos] = useState([]);
@@ -33,7 +33,7 @@ function Search() {
         setError(
           <GuestComponent
             title="No videos found"
-            subtitle="There are no videos here for your search result. Please try to search something else."
+            subTitle="There are no videos here for your search result. Please try to search something else."
             icon={
               <span className="w-full h-full flex items-center p-2">
                 <IoPlayOutline className="w-28 h-28" />

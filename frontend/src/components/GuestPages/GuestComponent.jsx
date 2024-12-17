@@ -1,11 +1,11 @@
 import React, { useRef } from "react";
-import LoginPopup from "../Auth/LoginPopup.jsx";
 import { GrLogin } from "react-icons/gr";
+import LoginPopup from "../Auth/LoginPopup.jsx";
 
 function GuestComponent({
   icon,
   title = "Sign in to view this page",
-  subtitle,
+  subTitle,
   route,
   guest = true,
 }) {
@@ -21,7 +21,7 @@ function GuestComponent({
             </span>
           </p>
           <h5 className="mt-6 mb-2 text-2xl font-semibold">{title}</h5>
-          <p>{subtitle}</p>
+          <p>{subTitle}</p>
           {guest && (
             <>
               <LoginPopup ref={LoginPopupDialog} route={route || ""} />
