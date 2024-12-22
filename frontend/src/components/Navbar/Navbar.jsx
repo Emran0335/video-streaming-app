@@ -11,7 +11,9 @@ function Navbar() {
 
   return (
     <nav className="flex justify-between items-center bg-black p-4">
-      <Logo />
+      <Link to="/">
+        <Logo />
+      </Link>
       <Search />
       {!authStatus && (
         <div>
