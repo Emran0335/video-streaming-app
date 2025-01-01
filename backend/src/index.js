@@ -15,7 +15,6 @@ connectDB()
     });
   })
   .catch((err) => console.log("MONGO db connection failed !!!", err));
-
 /*
 import os from "os"
 console.log("Operation System: ", os.platform())
