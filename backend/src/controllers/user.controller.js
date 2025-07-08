@@ -158,7 +158,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
-    sameSite: "None",
+    sameSite: "none",
   };
 
   return res
@@ -366,7 +366,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Error while uploading on coverImage!");
   }
 
-  const coverImageUrl = req.user?.avatar;
+  const coverImageUrl = req.user?.coverImage;
   const regex = /\/([^/]+)\.[^.]+$/;
   const match = coverImageUrl.match(regex);
 

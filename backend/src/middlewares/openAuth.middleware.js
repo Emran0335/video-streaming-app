@@ -15,7 +15,7 @@ export const checkUser = asyncHandler(async (req, _, next) => {
       if (!decodedToken) {
         next();
       }
-
+      // decodedToken { id: '1', iat: 1751957369, exp: 1752821369 }
       const user = await User.findById(decodedToken?._id).select(
         "-password -refreshToken"
       );
