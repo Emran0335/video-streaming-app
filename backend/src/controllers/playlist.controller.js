@@ -302,7 +302,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
   }
 
   if (!playlist.videos.includes(videoId)) {
-    throw new ApiError(400, "Video not in the playlist");
+    throw new ApiError(400, "Video not found in the playlist");
   }
 
   const removeVideo = await Playlist.findByIdAndUpdate(
